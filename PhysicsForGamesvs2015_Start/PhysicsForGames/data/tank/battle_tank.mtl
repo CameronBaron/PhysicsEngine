@@ -1,0 +1,43 @@
+newmtl Final_scene3:battle_lowpoly:polySurface10281SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Battle_tank_diffuse.tga
+bump Battle_tank_Normals.tga -bm 1
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 18.00
+newmtl polySurface12853SG2
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Hull_tank_diffuse.tga
+bump Hull_tank_Normal.tga -bm 1
+Ni 1.00
+Ks 0.00 0.00 0.00
+map_Ks Hull_tank_Spec.tga
+Ns 18.00
+newmtl polySurface12922SG2
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Treads_tank_Diffuse.tga
+bump Treads_tank_Normals.tga -bm 1
+Ni 1.00
+Ks 0.00 0.00 0.00
+map_Ks Treads_tank_spec.tga
+Ns 18.00
+newmtl polySurface12956SG2
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Treads_tank_Diffuse.tga
+bump Treads_tank_Normals.tga -bm 1
+Ni 1.00
+Ks 0.00 0.00 0.00
+map_Ks Treads_tank_spec.tga
+Ns 18.00
