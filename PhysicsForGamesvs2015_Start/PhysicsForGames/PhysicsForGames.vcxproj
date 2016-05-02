@@ -150,11 +150,15 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="DIYPhysicScene.h" />
     <ClInclude Include="Gizmos.h" />
     <ClInclude Include="gl_core_4_4.h" />
     <ClInclude Include="ParticleEmitter.h" />
     <ClInclude Include="ParticleFluidEmitter.h" />
     <ClInclude Include="Physics.h" />
+    <ClInclude Include="PhysicsObjects\PhysicsObject.h" />
+    <ClInclude Include="PhysicsObjects\RigidBody.h" />
+    <ClInclude Include="PhysicsObjects\SphereClass.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stb_image.h" />
@@ -163,12 +167,15 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="DIYPhysicScene.cpp" />
     <ClCompile Include="Gizmos.cpp" />
     <ClCompile Include="gl_core_4_4.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ParticleEmitter.cpp" />
     <ClCompile Include="ParticleFluidEmitter.cpp" />
     <ClCompile Include="Physics.cpp" />
+    <ClCompile Include="PhysicsObjects\RigidBody.cpp" />
+    <ClCompile Include="PhysicsObjects\SphereClass.cpp" />
     <ClCompile Include="Renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
