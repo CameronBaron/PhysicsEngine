@@ -1,5 +1,5 @@
 #pragma once
-#include "PhysicsObjects\PhysicsObject.h"
+#include "PhysicsObjects\SphereClass.h"
 
 #include <vector>
 
@@ -11,9 +11,11 @@ public:
 
 	void AddActor(PhysicsObject* actorToAdd);
 	void RemoveActor(PhysicsObject* actorToRemove);
-	void Update();
+	void Update(float deltaTime);
 	void DebugScene();
 	void AddGizmos();
+
+	vec3 ProjectileMotionPrediction(vec3 initialPos, vec3 initialVelocity, float time);
 
 	vec3 gravity;
 	float timeStep;

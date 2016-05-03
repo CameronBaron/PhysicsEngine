@@ -51,16 +51,16 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicsObjects\PhysicsObject.h">
+    <ClInclude Include="DIYPhysicsEngine\PhysicsObjects\PhysicsObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicsObjects\RigidBody.h">
+    <ClInclude Include="DIYPhysicsEngine\PhysicsObjects\RigidBody.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicsObjects\SphereClass.h">
+    <ClInclude Include="DIYPhysicsEngine\PhysicsObjects\SphereClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DIYPhysicScene.h">
+    <ClInclude Include="DIYPhysicsEngine\DIYPhysicScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -92,13 +92,13 @@
     <ClCompile Include="ParticleEmitter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PhysicsObjects\RigidBody.cpp">
+    <ClCompile Include="DIYPhysicsEngine\PhysicsObjects\RigidBody.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PhysicsObjects\SphereClass.cpp">
+    <ClCompile Include="DIYPhysicsEngine\PhysicsObjects\SphereClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DIYPhysicScene.cpp">
+    <ClCompile Include="DIYPhysicsEngine\DIYPhysicScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

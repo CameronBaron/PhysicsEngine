@@ -3,8 +3,10 @@
 //	5/02/16
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 #pragma once
+#include "../Gizmos.h"
 
 #include <../glm/glm.hpp>
+#include <../glm/ext.hpp>
 #include <PxPhysicsAPI.h>
 
 using namespace glm;

@@ -7,20 +7,27 @@
 
 #include "PhysicsObject.h"
 
+enum ForceType
+{
+	IMPULSE,
+	ACCELERATION
+};
 
 class RigidBody : public PhysicsObject
 {
 public:
 	RigidBody(vec3 position, vec3 velocity, quat rotation, float mass);
 
-	void virtual Update(vec2 gravity, float timeStep);
+	void virtual Update(vec3 gravity, float timeStep);
 	void virtual Debug();
-	void ApplyForce(vec2 force);
-	void ApplyForceToActor(RigidBody* actor2, vec3 force);
+	void ApplyForce(vec3 force, ForceType type);
+	void ApplyForceToActor(RigidBody* actor2, vec3 force, ForceType type);
 
-	vec2 m_position;
-	vec2 m_velocity;
+	vec3 m_position;
+	vec3 m_velocity;
 	float m_mass;
 	float m_rotation2D;
+
+	vec4 m_color;
 };
 

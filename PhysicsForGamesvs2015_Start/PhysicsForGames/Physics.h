@@ -4,6 +4,7 @@
 #include "Application.h"
 #include "Camera.h"
 #include "Render.h"
+#include "DIYPhysicsEngine/DIYPhysicScene.h"
 
 #include <PxPhysicsAPI.h>
 #include <PxScene.h>
@@ -39,6 +40,8 @@ public:
 	void SetupVisualDebugger();
 	void UpdatePhysX(float deltaTime);
 
+	void DIYPhysicsSetup();
+
 	void SetupTutorial1();
 
 	void renderGizmos(PxScene* physics_scene);
@@ -46,6 +49,7 @@ public:
     Renderer* m_renderer;
     FlyCamera m_camera;
     float m_delta_time;
+	float dt;
 
 private:
 	PxFoundation* m_PhysicsFoundation;
@@ -58,7 +62,14 @@ private:
 	PxMaterial* m_BoxMaterial;
 	PxCooking* m_PhysicsCooker;
 
+	DIYPhysicScene* physicsScene;
+
 	float counter = 0;
+
+
+	SphereClass* newBall;
+	SphereClass* newBall2;
+	float rocketTimer = 0;
 };
 
 

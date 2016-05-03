@@ -20,6 +20,7 @@ bool Physics::startup()
     glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
     glEnable(GL_DEPTH_TEST);
     Gizmos::create();
+	dt = 0;
 
     m_camera = FlyCamera(1280.0f / 720.0f, 10.0f);
     m_camera.setLookAt(vec3(10, 10, 10), vec3(0), vec3(0, 1, 0));
@@ -30,6 +31,12 @@ bool Physics::startup()
 	SetUpPhysX();
 	SetupVisualDebugger();
 	SetupTutorial1();
+	DIYPhysicsSetup();
+
+	for (int i = 0; i < 20; i++)
+	{
+		Gizmos::addSphere(physicsScene->ProjectileMotionPrediction(newBall->m_position, newBall->m_velocity, i * 0.5f), 0.5f, 5, 5, vec4(0, 0, 1, 1));
+	}
 	
     return true;
 }
@@ -52,11 +59,9 @@ bool Physics::update()
         return false;
     }
 
-    Gizmos::clear();
+    //Gizmos::clear();
 
-    float dt = (float)glfwGetTime();
-    m_delta_time = dt;
-    glfwSetTime(0.0);
+    dt = (float)glfwGetTime() - dt;
 
     vec4 white(1);
     vec4 black(0, 0, 0, 1);
@@ -69,9 +74,33 @@ bool Physics::update()
             i == 10 ? white : black);
     }
 
+#pragma region Wireframe Rocket
+	//rocketTimer += dt;
+	//if (rocketTimer > 0.03f && newBall->m_mass > 2)
+	//{
+	//	SphereClass* gas;
+	//	float mass = 2;
+	//	float color = rand() % 2 - 0.5f;
+	//	gas = new SphereClass(newBall->m_position - vec3(0,0.5f,0), vec3(0, 0, 0), mass, 0.2f, vec4(color, color, color, 1));
+	//	newBall->m_mass -= mass;
+	//	physicsScene->AddActor(gas);
+	//	gas->ApplyForceToActor(newBall, vec3(0, 4000, 0), ForceType::ACCELERATION);
+	//	rocketTimer = 0;
+	//}
+#pragma endregion	
+
     m_camera.update(1.0f / 60.0f);
 
 	UpdatePhysX(dt);
+	physicsScene->Update(dt);
+	counter += dt;
+	if (counter > 1)
+	{
+		physicsScene->AddGizmos();
+		counter = 0;
+	}
+
+	dt = glfwGetTime();
 
     return true;
 }
@@ -155,6 +184,17 @@ void Physics::UpdatePhysX(float a_deltaTime)
 	{
 
 	}
+}
+
+void Physics::DIYPhysicsSetup()
+{
+	physicsScene = new DIYPhysicScene();
+	physicsScene->gravity = vec3(0, -10, 0);
+	physicsScene->timeStep = 0.001f;
+	//add four balls to simulation
+	newBall = new SphereClass(vec3(0, 0, 0), vec3(10, 20, 0), 10, 0.5f, vec4(1, 0, 0, 1));
+
+	physicsScene->AddActor(newBall);
 }
 
 void Physics::SetupTutorial1()
