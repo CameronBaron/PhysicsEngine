@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "Render.h"
 #include "DIYPhysicsEngine/DIYPhysicScene.h"
+#include "DIYPhysicsEngine\PhysicsObjects\Plane.h"
 
 #include <PxPhysicsAPI.h>
 #include <PxScene.h>
@@ -69,6 +70,7 @@ private:
 
 	SphereClass* newBall;
 	SphereClass* newBall2;
+	Plane* plane;
 	float rocketTimer = 0;
 };
 

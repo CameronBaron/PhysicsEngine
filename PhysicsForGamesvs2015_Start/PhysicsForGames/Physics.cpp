@@ -33,10 +33,10 @@ bool Physics::startup()
 	SetupTutorial1();
 	DIYPhysicsSetup();
 
-	for (int i = 0; i < 20; i++)
-	{
-		Gizmos::addSphere(physicsScene->ProjectileMotionPrediction(newBall->m_position, newBall->m_velocity, i * 0.5f), 0.5f, 5, 5, vec4(0, 0, 1, 1));
-	}
+	//for (int i = 0; i < 20; i++)
+	//{
+	//	Gizmos::addSphere(physicsScene->ProjectileMotionPrediction(newBall->m_position, newBall->m_velocity, i * 0.5f), 0.5f, 3, 3, vec4(0, 0, 1, 1));
+	//}
 	
     return true;
 }
@@ -59,7 +59,7 @@ bool Physics::update()
         return false;
     }
 
-    //Gizmos::clear();
+    Gizmos::clear();
 
     dt = (float)glfwGetTime() - dt;
 
@@ -75,32 +75,27 @@ bool Physics::update()
     }
 
 #pragma region Wireframe Rocket
-	//rocketTimer += dt;
-	//if (rocketTimer > 0.03f && newBall->m_mass > 2)
-	//{
-	//	SphereClass* gas;
-	//	float mass = 2;
-	//	float color = rand() % 2 - 0.5f;
-	//	gas = new SphereClass(newBall->m_position - vec3(0,0.5f,0), vec3(0, 0, 0), mass, 0.2f, vec4(color, color, color, 1));
-	//	newBall->m_mass -= mass;
-	//	physicsScene->AddActor(gas);
-	//	gas->ApplyForceToActor(newBall, vec3(0, 4000, 0), ForceType::ACCELERATION);
-	//	rocketTimer = 0;
-	//}
+	rocketTimer += dt;
+	if (rocketTimer > 0.03f && newBall->m_mass > 0.4f)
+	{
+		SphereClass* gas;
+		float mass = 0.2f;
+		float color = rand() % 2 - 0.5f;
+		gas = new SphereClass(newBall->m_position - vec3(0,0.5f,0), vec3(0, 0, 0), mass, 0.1f, vec4(color, color, color, 1));
+		newBall->m_mass -= mass;
+		physicsScene->AddActor(gas);
+		gas->ApplyForceToActor(newBall, vec3(0, 100, 0), ForceType::ACCELERATION);
+		rocketTimer = 0;
+	}
 #pragma endregion	
 
     m_camera.update(1.0f / 60.0f);
 
 	UpdatePhysX(dt);
 	physicsScene->Update(dt);
-	counter += dt;
-	if (counter > 1)
-	{
-		physicsScene->AddGizmos();
-		counter = 0;
-	}
+	physicsScene->AddGizmos();
 
-	dt = glfwGetTime();
+	dt = (float)glfwGetTime();
 
     return true;
 }
@@ -192,9 +187,12 @@ void Physics::DIYPhysicsSetup()
 	physicsScene->gravity = vec3(0, -10, 0);
 	physicsScene->timeStep = 0.001f;
 	//add four balls to simulation
-	newBall = new SphereClass(vec3(0, 0, 0), vec3(10, 20, 0), 10, 0.5f, vec4(1, 0, 0, 1));
+	newBall = new SphereClass(vec3(0, 0, 0), vec3(0, 0, 0), 10, 0.5f, vec4(1, 0, 0, 1));
 
 	physicsScene->AddActor(newBall);
+
+	plane = new Plane(vec3(0, 1, 0), -2);
+	physicsScene->AddActor(plane);
 }
 
 void Physics::SetupTutorial1()

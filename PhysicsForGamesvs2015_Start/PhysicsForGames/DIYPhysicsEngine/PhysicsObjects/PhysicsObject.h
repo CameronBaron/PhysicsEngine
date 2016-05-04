@@ -19,6 +19,13 @@ enum ShapeType
 	CAPSULE
 };
 
+enum PhysicsType
+{
+	DYNAMIC,
+	STATIC,
+	KINEMATIC
+};
+
 class PhysicsObject
 {
 public:
@@ -28,6 +35,9 @@ public:
 	void virtual MakeGizmo() = 0;
 	void virtual ResetPosition() {};
 
+protected:
 	ShapeType m_shapeID;
+	PhysicsType m_physicsType;
+	bool m_isAwake = true;
 };
 

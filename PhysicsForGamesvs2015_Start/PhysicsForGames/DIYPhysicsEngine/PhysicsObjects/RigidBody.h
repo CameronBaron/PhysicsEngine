@@ -20,11 +20,12 @@ public:
 
 	void virtual Update(vec3 gravity, float timeStep);
 	void virtual Debug();
-	void ApplyForce(vec3 force, ForceType type);
+	void ApplyForce(vec3 force, ForceType type, float time = 0);
 	void ApplyForceToActor(RigidBody* actor2, vec3 force, ForceType type);
 
 	vec3 m_position;
 	vec3 m_velocity;
+	vec3 m_acceleration;
 	float m_mass;
 	float m_rotation2D;
 

@@ -31,7 +31,7 @@ void DIYPhysicScene::Update(float dt)
 		return;
 	for (PhysicsObject* po : actors)
 	{
-		po->Update(gravity, timeStep);
+		po->Update(gravity, dt);
 	}
 }
 
