@@ -16,7 +16,8 @@ enum ShapeType
 	PLANE,
 	SPHERE,
 	BOX,
-	CAPSULE
+	CAPSULE,
+	Last = CAPSULE
 };
 
 enum PhysicsType
@@ -35,7 +36,6 @@ public:
 	void virtual MakeGizmo() = 0;
 	void virtual ResetPosition() {};
 
-protected:
 	ShapeType m_shapeID;
 	PhysicsType m_physicsType;
 	bool m_isAwake = true;

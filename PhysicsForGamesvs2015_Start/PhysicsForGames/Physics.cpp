@@ -84,7 +84,7 @@ bool Physics::update()
 		gas = new SphereClass(newBall->m_position - vec3(0,0.5f,0), vec3(0, 0, 0), mass, 0.1f, vec4(color, color, color, 1));
 		newBall->m_mass -= mass;
 		physicsScene->AddActor(gas);
-		gas->ApplyForceToActor(newBall, vec3(0, 100, 0), ForceType::ACCELERATION);
+		gas->ApplyForceToActor(newBall, vec3(0, 150, 0), ForceType::ACCELERATION);
 		rocketTimer = 0;
 	}
 #pragma endregion	
