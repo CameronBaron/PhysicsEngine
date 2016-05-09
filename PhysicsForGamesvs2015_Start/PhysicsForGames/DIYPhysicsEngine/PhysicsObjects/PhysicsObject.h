@@ -39,5 +39,6 @@ public:
 	ShapeType m_shapeID;
 	PhysicsType m_physicsType;
 	bool m_isAwake = true;
+
 };
 

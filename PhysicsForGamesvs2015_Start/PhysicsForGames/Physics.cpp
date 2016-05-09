@@ -76,12 +76,12 @@ bool Physics::update()
 
 #pragma region Wireframe Rocket
 	rocketTimer += dt;
-	if (rocketTimer > 0.03f && newBall->m_mass > 0.4f)
+	float mass = 1;
+	if (rocketTimer > 0.03f && newBall->m_mass > mass)
 	{
 		SphereClass* gas;
-		float mass = 0.2f;
 		float color = rand() % 2 - 0.5f;
-		gas = new SphereClass(newBall->m_position - vec3(0,0.5f,0), vec3(0, 0, 0), mass, 0.1f, vec4(color, color, color, 1));
+		gas = new SphereClass(newBall->m_position - vec3(0,0.5f,0), vec3(0, 0, 0), mass, 0.25f, vec4(color, color, color, 1));
 		newBall->m_mass -= mass;
 		physicsScene->AddActor(gas);
 		gas->ApplyForceToActor(newBall, vec3(0, 150, 0), ForceType::ACCELERATION);
@@ -184,14 +184,14 @@ void Physics::UpdatePhysX(float a_deltaTime)
 void Physics::DIYPhysicsSetup()
 {
 	physicsScene = new DIYPhysicScene();
-	physicsScene->gravity = vec3(0, -10, 0);
+	physicsScene->gravity = vec3(0, -5, 0);
 	physicsScene->timeStep = 0.001f;
 	//add four balls to simulation
 	newBall = new SphereClass(vec3(0, 0, 0), vec3(0, 0, 0), 10, 0.5f, vec4(1, 0, 0, 1));
 
 	physicsScene->AddActor(newBall);
 
-	plane = new Plane(vec3(0, 1, 0), -2);
+	plane = new Plane(vec3(0, 1, 0), -1);
 	physicsScene->AddActor(plane);
 }
 

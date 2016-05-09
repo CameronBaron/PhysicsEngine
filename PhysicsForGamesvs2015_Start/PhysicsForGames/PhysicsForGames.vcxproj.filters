@@ -66,6 +66,9 @@
     <ClInclude Include="DIYPhysicsEngine\PhysicsObjects\Plane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DIYPhysicsEngine\PhysicsObjects\BoxClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -105,6 +108,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DIYPhysicsEngine\PhysicsObjects\Plane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DIYPhysicsEngine\PhysicsObjects\BoxClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

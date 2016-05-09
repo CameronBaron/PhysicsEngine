@@ -3,6 +3,7 @@
 Plane::Plane(vec3 normal, float distance) : m_normal(normal), m_distance(distance)
 {
 	m_shapeID = ShapeType::PLANE;
+	m_physicsType = PhysicsType::STATIC;
 }
 
 void Plane::MakeGizmo()
