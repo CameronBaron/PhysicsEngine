@@ -104,6 +104,10 @@ void DIYPhysicScene::CheckForCollision()
 		{
 			PhysicsObject* obj1 = actors[outer];
 			PhysicsObject* obj2 = actors[inner];
+
+			if (obj1->m_physicsType == PhysicsType::STATIC && obj2->m_physicsType == PhysicsType::STATIC)
+				continue;
+
 			int _shapeID1 = obj1->m_shapeID;
 			int _shapeID2 = obj2->m_shapeID;
 			// Using function pointers
@@ -163,9 +167,9 @@ bool DIYPhysicScene::Sphere2Plane(PhysicsObject * obj1, PhysicsObject * obj2)
 			// Collision occurs
 			vec3 planeNormal = plane->m_normal;
 
-			vec3 resultVector = -1 * sphere->m_mass * planeNormal * (dot(planeNormal, sphere->m_velocity));
+			vec3 resultVector = -1 * sphere->m_mass * planeNormal * (dot(planeNormal, sphere->m_linearVelocity));
 			sphere->ApplyForce(resultVector, ForceType::ACCELERATION);
-			sphere->m_position += collisionNormal * intersection * 0.5f;
+			sphere->m_position += planeNormal * intersection;
 			return true;
 		}
 	}
@@ -178,29 +182,35 @@ bool DIYPhysicScene::Sphere2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
 	SphereClass* sphere1 = dynamic_cast<SphereClass*>(obj1);
 	SphereClass* sphere2 = dynamic_cast<SphereClass*>(obj2);
 	//if successful then test for collision
-	if (sphere1 != nullptr && sphere2 != nullptr)
+	if (sphere1 == nullptr || sphere2 == nullptr)
+	return false;
+
+	vec3 delta = sphere2->m_position - sphere1->m_position;
+	float distance = glm::length(delta);
+	float intersection = sphere1->m_radius + sphere2->m_radius - distance;
+	// check collision here
+	if (intersection > 0)
 	{
-		vec3 delta = sphere2->m_position - sphere1->m_position;
-		float distance = glm::length(delta);
-		float intersection = sphere1->m_radius + sphere2->m_radius - distance;
-		// check collision here
-		if (intersection > 0)
-		{
-			// Find the point where the collision occured
-			// The plane is static, so collision response only applies to sphere
-			vec3 collisionNormal = normalize(delta);
-			vec3 relativeVelocity = sphere1->m_velocity - sphere2->m_velocity;
-			vec3 collisionVector = collisionNormal * (dot(relativeVelocity, collisionNormal));
-			vec3 forceVector = collisionVector * 1.0f / (1.0f / sphere1->m_mass + 1.0f / sphere2->m_mass);
+		// Find the point where the collision occured
+		// The plane is static, so collision response only applies to sphere
+		vec3 collisionNormal = normalize(delta);
+		vec3 relativeVelocity = sphere1->m_linearVelocity - sphere2->m_linearVelocity;
+		vec3 collisionVector = collisionNormal * (dot(relativeVelocity, collisionNormal));
+		vec3 forceVector = collisionVector * 1.0f / (1.0f / sphere1->m_mass + 1.0f / sphere2->m_mass);
 
-			sphere1->ApplyForceToActor(sphere2, 2 * forceVector, ForceType::ACCELERATION);
-			sphere1->ApplyForceToActor(sphere2,vec3(rand() % 2, rand() % 2,rand() % 2), ForceType::ACCELERATION);
+		sphere1->ApplyForceToActor(sphere2, 2 * forceVector, ForceType::ACCELERATION);
+		sphere1->ApplyForce(forceVector, ForceType::ACCELERATION);
+		//sphere1->ApplyForceToActor(sphere2,vec3(rand() % 2, rand() % 2,rand() % 2), ForceType::ACCELERATION);
 
-			vec3 seperationVector = collisionNormal * intersection * 0.5f;
+		vec3 seperationVector = collisionNormal * intersection * 0.5f;
+		if (sphere1->m_physicsType == PhysicsType::DYNAMIC)
 			sphere1->m_position -= seperationVector;
+		if (sphere2->m_physicsType == PhysicsType::DYNAMIC)
 			sphere2->m_position += seperationVector;
-			return true;
-		}
+
+
+
+		return true;
 	}
 	return false;
 }

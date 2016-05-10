@@ -2,7 +2,7 @@
 #include <limits>
 
 RigidBody::RigidBody(vec3 a_position, vec3 a_velocity, quat a_rotation, float a_mass) :
-	m_position(a_position), m_velocity(a_velocity), m_mass(a_mass)
+	m_position(a_position), m_linearVelocity(a_velocity), m_mass(a_mass)
 {
 	m_rotation2D = 0;
 	if (m_physicsType == PhysicsType::STATIC)
@@ -19,10 +19,13 @@ void RigidBody::Update(vec3 a_gravity, float a_timeStep)
 		if (m_physicsType != PhysicsType::STATIC)
 			m_acceleration += a_gravity;
 		// Add acceleration to velocity
-		m_velocity += m_acceleration * a_timeStep;
+		m_linearVelocity += m_acceleration * a_timeStep;
+
+		// Apply Drag
+		m_linearVelocity *= m_linearDrag;
 
 		// Add velocity to position
-		m_position += (m_velocity * a_timeStep);
+		m_position += (m_linearVelocity * a_timeStep);
 		m_acceleration = vec3(0);
 	}
 }

@@ -30,11 +30,21 @@ void Camera::setLookAt(vec3 pos, vec3 center, vec3 up)
 	updateViewProj();
 }
 
+const vec3 Camera::getForward()
+{
+	return world[2].xyz * -1;
+}
+
 void Camera::setPosition(vec3 pos)
 {
 	world[3] = vec4(pos, 1);
 	view = glm::inverse(world);
 	updateViewProj();
+}
+
+const vec3 Camera::getPosition()
+{
+	return world[3].xyz;
 }
 
 vec3 Camera::pickAgainstPlane(float x, float y, vec4 plane)

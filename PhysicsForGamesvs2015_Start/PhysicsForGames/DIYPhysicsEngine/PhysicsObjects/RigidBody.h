@@ -24,10 +24,18 @@ public:
 	void ApplyForceToActor(RigidBody* actor2, vec3 force, ForceType type);
 
 	vec3 m_position;
-	vec3 m_velocity;
+	vec3 m_linearVelocity;
+	vec3 m_angularVelocity;
 	vec3 m_acceleration;
 	float m_mass;
 	float m_rotation2D;
+
+	float m_linearDrag = 1;
+	float m_rotationalDrag = 1;
+
+	float m_staticFriction = 1;
+	float m_dynamicFriction = 1;
+	float m_bounciness; // Coefficient of Restitution
 
 	vec4 m_color;
 };

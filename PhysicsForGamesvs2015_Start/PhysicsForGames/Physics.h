@@ -72,6 +72,7 @@ private:
 	SphereClass* newBall2;
 	Plane* plane;
 	float rocketTimer = 0;
+	float fireTimer = 0;
 };
 
 

@@ -17,8 +17,10 @@ public:
 
 	void updateViewProj();
 	void setPosition(vec3 pos);
+	const vec3 getPosition();
 	void setPerspective(float fov, float aspect, float near, float far);
 	void setLookAt(vec3 pos, vec3 center, vec3 up);
+	const vec3 getForward();
 
 	virtual void update(float dt) = 0;
 

@@ -32,11 +32,6 @@ bool Physics::startup()
 	SetupVisualDebugger();
 	SetupTutorial1();
 	DIYPhysicsSetup();
-
-	//for (int i = 0; i < 20; i++)
-	//{
-	//	Gizmos::addSphere(physicsScene->ProjectileMotionPrediction(newBall->m_position, newBall->m_velocity, i * 0.5f), 0.5f, 3, 3, vec4(0, 0, 1, 1));
-	//}
 	
     return true;
 }
@@ -75,8 +70,19 @@ bool Physics::update()
     }
 
 #pragma region Wireframe Rocket
+	fireTimer += dt;
 	rocketTimer += dt;
-	float mass = 1;
+	float mass = 10;
+
+	if (fireTimer > 1 && glfwGetKey(m_window, GLFW_KEY_SPACE) == GLFW_PRESS)
+	{
+		SphereClass* ballz;
+		float launchSpeed = 10;
+		ballz = new SphereClass( m_camera.getPosition() + m_camera.getForward(), m_camera.getForward() * launchSpeed, 5.0f, 0.25f, vec4(0, 0, 0, 1));
+		physicsScene->AddActor(ballz);
+		fireTimer = 0;
+	}
+
 	if (rocketTimer > 0.03f && newBall->m_mass > mass)
 	{
 		SphereClass* gas;
@@ -84,7 +90,7 @@ bool Physics::update()
 		gas = new SphereClass(newBall->m_position - vec3(0,0.5f,0), vec3(0, 0, 0), mass, 0.25f, vec4(color, color, color, 1));
 		newBall->m_mass -= mass;
 		physicsScene->AddActor(gas);
-		gas->ApplyForceToActor(newBall, vec3(0, 150, 0), ForceType::ACCELERATION);
+		gas->ApplyForceToActor(newBall, vec3(0, 500, 0), ForceType::ACCELERATION);
 		rocketTimer = 0;
 	}
 #pragma endregion	
@@ -184,14 +190,14 @@ void Physics::UpdatePhysX(float a_deltaTime)
 void Physics::DIYPhysicsSetup()
 {
 	physicsScene = new DIYPhysicScene();
-	physicsScene->gravity = vec3(0, -5, 0);
+	physicsScene->gravity = vec3(0, -10, 0);
 	physicsScene->timeStep = 0.001f;
 	//add four balls to simulation
-	newBall = new SphereClass(vec3(0, 0, 0), vec3(0, 0, 0), 10, 0.5f, vec4(1, 0, 0, 1));
+	newBall = new SphereClass(vec3(0, 0, 0), vec3(0, 0, 0), 1000, 0.5f, vec4(1, 0, 0, 1));
 
 	physicsScene->AddActor(newBall);
 
-	plane = new Plane(vec3(0, 1, 0), -1);
+	plane = new Plane(vec3(0, 1, 0), -0.1f);
 	physicsScene->AddActor(plane);
 }
 
