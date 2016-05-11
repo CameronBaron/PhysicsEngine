@@ -28,7 +28,7 @@ public:
 	vec3 m_angularVelocity;
 	vec3 m_acceleration;
 	float m_mass;
-	float m_rotation2D;
+	vec3 m_rotation;
 
 	float m_linearDrag = 1;
 	float m_rotationalDrag = 1;
@@ -38,5 +38,8 @@ public:
 	float m_bounciness; // Coefficient of Restitution
 
 	vec4 m_color;
+
+	const float MIN_LINEAR_THRESHOLD = 0.1f;
+	const float MIN_ROTATION_THRESHOLD = 0.1f;
 };
 

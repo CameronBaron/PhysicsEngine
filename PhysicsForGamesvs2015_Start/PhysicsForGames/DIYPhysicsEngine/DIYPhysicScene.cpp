@@ -168,7 +168,7 @@ bool DIYPhysicScene::Sphere2Plane(PhysicsObject * obj1, PhysicsObject * obj2)
 			vec3 planeNormal = plane->m_normal;
 
 			vec3 resultVector = -1 * sphere->m_mass * planeNormal * (dot(planeNormal, sphere->m_linearVelocity));
-			sphere->ApplyForce(resultVector, ForceType::ACCELERATION);
+			//sphere->ApplyForce(resultVector, ForceType::ACCELERATION);
 			sphere->m_position += planeNormal * intersection;
 			return true;
 		}
@@ -194,19 +194,24 @@ bool DIYPhysicScene::Sphere2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
 		// Find the point where the collision occured
 		// The plane is static, so collision response only applies to sphere
 		vec3 collisionNormal = normalize(delta);
-		vec3 relativeVelocity = sphere1->m_linearVelocity - sphere2->m_linearVelocity;
+		vec3 relativeVelocity = sphere2->m_linearVelocity - sphere1->m_linearVelocity;
 		vec3 collisionVector = collisionNormal * (dot(relativeVelocity, collisionNormal));
 		vec3 forceVector = collisionVector * 1.0f / (1.0f / sphere1->m_mass + 1.0f / sphere2->m_mass);
 
-		sphere1->ApplyForceToActor(sphere2, 2 * forceVector, ForceType::ACCELERATION);
-		sphere1->ApplyForce(forceVector, ForceType::ACCELERATION);
-		//sphere1->ApplyForceToActor(sphere2,vec3(rand() % 2, rand() % 2,rand() % 2), ForceType::ACCELERATION);
+		float massRatio1 = sphere1->m_mass / (sphere1->m_mass + sphere2->m_mass);
+		float massRatio2 = sphere2->m_mass / (sphere1->m_mass + sphere2->m_mass);
+		sphere1->m_linearVelocity = forceVector * massRatio2 * 0.5f;
+		sphere2->m_linearVelocity = -forceVector * massRatio1 * 0.5f;
+
+		//sphere1->ApplyForceToActor(sphere2, 2 * forceVector, ForceType::ACCELERATION);
+
+		//sphere1->ApplyForce(forceVector, ForceType::ACCELERATION);
 
 		vec3 seperationVector = collisionNormal * intersection * 0.5f;
 		if (sphere1->m_physicsType == PhysicsType::DYNAMIC)
-			sphere1->m_position -= seperationVector;
+			sphere1->m_position -= seperationVector * massRatio2;
 		if (sphere2->m_physicsType == PhysicsType::DYNAMIC)
-			sphere2->m_position += seperationVector;
+			sphere2->m_position += seperationVector * massRatio1;
 
 
 

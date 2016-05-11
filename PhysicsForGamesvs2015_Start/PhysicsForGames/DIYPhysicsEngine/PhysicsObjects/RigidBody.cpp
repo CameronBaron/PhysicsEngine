@@ -4,7 +4,7 @@
 RigidBody::RigidBody(vec3 a_position, vec3 a_velocity, quat a_rotation, float a_mass) :
 	m_position(a_position), m_linearVelocity(a_velocity), m_mass(a_mass)
 {
-	m_rotation2D = 0;
+	m_rotation = vec3(0);
 	if (m_physicsType == PhysicsType::STATIC)
 	{
 		a_mass = std::numeric_limits<float>::max();
@@ -21,8 +21,19 @@ void RigidBody::Update(vec3 a_gravity, float a_timeStep)
 		// Add acceleration to velocity
 		m_linearVelocity += m_acceleration * a_timeStep;
 
-		// Apply Drag
+		// Apply Drag & Rotational forces
 		m_linearVelocity *= m_linearDrag;
+
+		if (glm::length(m_linearVelocity) < MIN_LINEAR_THRESHOLD)
+		{
+			m_linearVelocity = vec3(0);
+		}
+		if (glm::length(m_angularVelocity) < MIN_ROTATION_THRESHOLD)
+		{
+			m_angularVelocity = vec3(0);
+		}
+		m_angularVelocity += m_rotationalDrag;
+		m_rotation += m_angularVelocity * a_timeStep;
 
 		// Add velocity to position
 		m_position += (m_linearVelocity * a_timeStep);
@@ -45,6 +56,6 @@ void RigidBody::ApplyForce(vec3 a_force, ForceType type, float a_time)
 
 void RigidBody::ApplyForceToActor(RigidBody *actor2, vec3 force, ForceType type)
 {
-	actor2->ApplyForce(force, type);
-	ApplyForce(-force, type);
+	ApplyForce(force, type);
+	actor2->ApplyForce(-force, type);
 }
