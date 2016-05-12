@@ -2,6 +2,7 @@
 #include "PhysicsObjects\SphereClass.h"
 #include "PhysicsObjects\Plane.h"
 #include "PhysicsObjects\BoxClass.h"
+#include "PhysicsObjects\SpringJoint.h"
 
 #include <vector>
 
@@ -28,18 +29,31 @@ public:
 	static bool Plane2Sphere(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool Plane2Box(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool Plane2Capsule(PhysicsObject* obj1, PhysicsObject* obj2);
+	static bool Plane2Joint(PhysicsObject* obj1, PhysicsObject* obj2);
+
 	static bool Sphere2Plane(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool Sphere2Sphere(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool Sphere2Box(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool Sphere2Capsule(PhysicsObject* obj1, PhysicsObject* obj2);
+	static bool Sphere2Joint(PhysicsObject* obj1, PhysicsObject* obj2);
+
 	static bool Box2Plane(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool Box2Sphere(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool Box2Box(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool Box2Capsule(PhysicsObject* obj1, PhysicsObject* obj2);
+	static bool Box2Joint(PhysicsObject* obj1, PhysicsObject* obj2);
+
 	static bool Capsule2Plane(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool Capsule2Sphere(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool Capsule2Box(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool Capsule2Capsule(PhysicsObject* obj1, PhysicsObject* obj2);
+	static bool Capsule2Joint(PhysicsObject* obj1, PhysicsObject* obj2);
+
+	static bool Joint2Plane(PhysicsObject* obj1, PhysicsObject* obj2);
+	static bool Joint2Sphere(PhysicsObject* obj1, PhysicsObject* obj2);
+	static bool Joint2Box(PhysicsObject* obj1, PhysicsObject* obj2);
+	static bool Joint2Capsule(PhysicsObject* obj1, PhysicsObject* obj2);
+	static bool Joint2Joint(PhysicsObject* obj1, PhysicsObject* obj2);
 
 	vec3 gravity;
 	float timeStep;

@@ -6,6 +6,7 @@
 #include "Render.h"
 #include "DIYPhysicsEngine/DIYPhysicScene.h"
 #include "DIYPhysicsEngine\PhysicsObjects\Plane.h"
+#include "DIYPhysicsEngine\PhysicsObjects\SpringJoint.h"
 
 #include <PxPhysicsAPI.h>
 #include <PxScene.h>
@@ -67,12 +68,15 @@ private:
 
 	float counter = 0;
 
-
 	SphereClass* newBall;
 	SphereClass* newBall2;
 	Plane* plane;
 	float rocketTimer = 0;
 	float fireTimer = 0;
+
+	SpringJoint* joint;
+
+	SphereClass* ballList[100];
 };
 
 

@@ -153,6 +153,7 @@
     <ClInclude Include="DIYPhysicsEngine\DIYPhysicScene.h" />
     <ClInclude Include="DIYPhysicsEngine\PhysicsObjects\BoxClass.h" />
     <ClInclude Include="DIYPhysicsEngine\PhysicsObjects\Plane.h" />
+    <ClInclude Include="DIYPhysicsEngine\PhysicsObjects\SpringJoint.h" />
     <ClInclude Include="Gizmos.h" />
     <ClInclude Include="gl_core_4_4.h" />
     <ClInclude Include="ParticleEmitter.h" />
@@ -172,6 +173,7 @@
     <ClCompile Include="DIYPhysicsEngine\DIYPhysicScene.cpp" />
     <ClCompile Include="DIYPhysicsEngine\PhysicsObjects\BoxClass.cpp" />
     <ClCompile Include="DIYPhysicsEngine\PhysicsObjects\Plane.cpp" />
+    <ClCompile Include="DIYPhysicsEngine\PhysicsObjects\SpringJoint.cpp" />
     <ClCompile Include="Gizmos.cpp" />
     <ClCompile Include="gl_core_4_4.c" />
     <ClCompile Include="main.cpp" />

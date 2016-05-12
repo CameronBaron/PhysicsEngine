@@ -69,31 +69,22 @@ bool Physics::update()
             i == 10 ? white : black);
     }
 
-#pragma region Wireframe Rocket
+#pragma region Fire Spheres
 	fireTimer += dt;
 	rocketTimer += dt;
-	float mass = 10;
+	float mass = 30;
 
 	if (fireTimer > 0.5f && glfwGetKey(m_window, GLFW_KEY_SPACE) == GLFW_PRESS)
 	{
 		SphereClass* ballz;
-		float launchSpeed = 10;
-		ballz = new SphereClass( m_camera.getPosition() + m_camera.getForward(), m_camera.getForward() * launchSpeed, 5.0f, 0.5f, vec4(0, 0, 0, 1));
+		float launchSpeed = 70;
+		ballz = new SphereClass( m_camera.getPosition() + m_camera.getForward(), m_camera.getForward() * launchSpeed, 5.0f, 3, vec4(0, 0, 0, 1));
 		ballz->m_linearDrag = 0.99f;
+		ballz->m_elasticity = 0.9f;
 		physicsScene->AddActor(ballz);
 		fireTimer = 0;
 	}
 
-	//if (rocketTimer > 0.03f && newBall->m_mass > mass)
-	//{
-	//	SphereClass* gas;
-	//	float color = rand() % 2 - 0.5f;
-	//	gas = new SphereClass(newBall->m_position - vec3(0,0.5f,0), vec3(0, 0, 0), mass, 0.25f, vec4(color, color, color, 1));
-	//	newBall->m_mass -= mass;
-	//	physicsScene->AddActor(gas);
-	//	gas->ApplyForceToActor(newBall, vec3(0, 500, 0), ForceType::ACCELERATION);
-	//	rocketTimer = 0;
-	//}
 #pragma endregion	
 
     m_camera.update(1.0f / 60.0f);
@@ -194,12 +185,61 @@ void Physics::DIYPhysicsSetup()
 	physicsScene->gravity = vec3(0, -10, 0);
 	physicsScene->timeStep = 0.001f;
 	//add four balls to simulation
-	plane = new Plane(vec3(0, 1, 0), -0.1f);
-	physicsScene->AddActor(plane);
-	newBall = new SphereClass(vec3(0, 0, 0), vec3(0, 0, 0), 99999999, 0.5f, vec4(1, 0, 0, 1));
+	//plane = new Plane(vec3(0, 1, 0), -0.1f);
+	//physicsScene->AddActor(plane);
+
+	newBall = new SphereClass(vec3(0, 30, 0), vec3(0, 0, 0), 99999999, 0.5f, vec4(1, 0, 0, 1));
+	newBall->m_physicsType = PhysicsType::STATIC;
 
 	physicsScene->AddActor(newBall);
 
+	float ballRadius = 0.1f;
+	float mass = 1;
+
+	//SphereClass* ball2;
+	//int numberBalls = 20;
+	//for (int i = 0; i < numberBalls; i++)
+	//{
+	//	ball2 = new SphereClass(vec3(i * 2.0f, 30, 0), vec3(0), mass, ballRadius, vec4(0, 1, 0, 1));
+	//	physicsScene->AddActor(ball2);
+	//	SpringJoint* spring = new SpringJoint(newBall, ball2, 40, 0.9999f);
+	//	physicsScene->AddActor(spring);
+	//	newBall = ball2;
+	//}
+
+	for (int row = 0; row < 10; row++)
+	{
+		for (int col = 0; col < 10; col++)
+		{
+			int index = row * 10 + col;
+			ballList[index] = new SphereClass(vec3(col, -row, 0), vec3(0), mass, ballRadius, vec4(0, 1, 0, 1));
+			physicsScene->AddActor(ballList[index]);
+		}
+	}
+
+	for (int i = 0; i < 10; i++)
+	{
+		ballList[i]->m_physicsType = PhysicsType::STATIC;
+		ballList[i]->m_color = vec4(1, 0, 0, 1);
+	}
+
+	for (int row = 0; row < 10; row++)
+	{
+		for (int col = 0; col < 10; col++)
+		{
+			int index = row * 10 + col;
+			if (col > 0)
+			{
+				SpringJoint* spring1 = new SpringJoint(ballList[row * 10 + (col -1)], ballList[index], 80, 0.99f);
+				physicsScene->AddActor(spring1);
+			}
+			if (row > 0)
+			{
+				SpringJoint* spring2 = new SpringJoint(ballList[(row - 1) * 10 + col], ballList[index], 80, 0.99f);
+				physicsScene->AddActor(spring2);
+			}
+		}
+	}
 }
 
 void Physics::SetupTutorial1()

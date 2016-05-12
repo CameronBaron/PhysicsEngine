@@ -17,7 +17,8 @@ enum ShapeType
 	SPHERE,
 	BOX,
 	CAPSULE,
-	Last = CAPSULE
+	JOINT,
+	Last = JOINT
 };
 
 enum PhysicsType

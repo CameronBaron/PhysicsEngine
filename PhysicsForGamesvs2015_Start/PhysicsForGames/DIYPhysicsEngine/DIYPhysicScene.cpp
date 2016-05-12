@@ -39,10 +39,11 @@ typedef bool(*func)(PhysicsObject*, PhysicsObject*);
 // Function pointer array for collisions
 static func collisionFunctionArray[] =
 {
-	DIYPhysicScene::Plane2Plane,	DIYPhysicScene::Plane2Sphere,	DIYPhysicScene::Plane2Box,		DIYPhysicScene::Plane2Capsule,
-	DIYPhysicScene::Sphere2Plane,	DIYPhysicScene::Sphere2Sphere,	DIYPhysicScene::Sphere2Box,		DIYPhysicScene::Sphere2Capsule,
-	DIYPhysicScene::Box2Plane,		DIYPhysicScene::Box2Sphere,		DIYPhysicScene::Box2Box,		DIYPhysicScene::Box2Capsule,
-	DIYPhysicScene::Capsule2Plane,  DIYPhysicScene::Capsule2Sphere, DIYPhysicScene::Capsule2Box,	DIYPhysicScene::Capsule2Capsule
+	DIYPhysicScene::Plane2Plane,	DIYPhysicScene::Plane2Sphere,	DIYPhysicScene::Plane2Box,		DIYPhysicScene::Plane2Capsule,	DIYPhysicScene::Plane2Joint,
+	DIYPhysicScene::Sphere2Plane,	DIYPhysicScene::Sphere2Sphere,	DIYPhysicScene::Sphere2Box,		DIYPhysicScene::Sphere2Capsule, DIYPhysicScene::Sphere2Joint,
+	DIYPhysicScene::Box2Plane,		DIYPhysicScene::Box2Sphere,		DIYPhysicScene::Box2Box,		DIYPhysicScene::Box2Capsule,	DIYPhysicScene::Box2Joint,
+	DIYPhysicScene::Capsule2Plane,  DIYPhysicScene::Capsule2Sphere, DIYPhysicScene::Capsule2Box,	DIYPhysicScene::Capsule2Capsule,DIYPhysicScene::Capsule2Joint,
+	DIYPhysicScene::Joint2Plane,	DIYPhysicScene::Joint2Sphere,	DIYPhysicScene::Joint2Box,		DIYPhysicScene::Joint2Capsule,	DIYPhysicScene::Joint2Joint
 };
 
 DIYPhysicScene::DIYPhysicScene()
@@ -108,6 +109,9 @@ void DIYPhysicScene::CheckForCollision()
 			if (obj1->m_physicsType == PhysicsType::STATIC && obj2->m_physicsType == PhysicsType::STATIC)
 				continue;
 
+			if (obj1->m_shapeID == ShapeType::JOINT || obj2->m_shapeID == ShapeType::JOINT)
+				continue;
+
 			int _shapeID1 = obj1->m_shapeID;
 			int _shapeID2 = obj2->m_shapeID;
 			// Using function pointers
@@ -151,6 +155,11 @@ bool DIYPhysicScene::Plane2Capsule(PhysicsObject * obj1, PhysicsObject * obj2)
 	return false;
 }
 
+bool DIYPhysicScene::Plane2Joint(PhysicsObject * obj1, PhysicsObject * obj2)
+{
+	return false;
+}
+
 bool DIYPhysicScene::Sphere2Plane(PhysicsObject * obj1, PhysicsObject * obj2)
 {
 	SphereClass* sphere = dynamic_cast<SphereClass*>(obj1);
@@ -168,8 +177,8 @@ bool DIYPhysicScene::Sphere2Plane(PhysicsObject * obj1, PhysicsObject * obj2)
 			vec3 planeNormal = plane->m_normal;
 
 			vec3 resultVector = -1 * sphere->m_mass * planeNormal * (dot(planeNormal, sphere->m_linearVelocity));
-			//sphere->ApplyForce(resultVector, ForceType::ACCELERATION);
 			sphere->m_position += planeNormal * intersection;
+			sphere->ApplyForce(resultVector * 5, ForceType::ACCELERATION);
 			return true;
 		}
 	}
@@ -196,24 +205,37 @@ bool DIYPhysicScene::Sphere2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
 		vec3 collisionNormal = normalize(delta);
 		vec3 relativeVelocity = sphere2->m_linearVelocity - sphere1->m_linearVelocity;
 		vec3 collisionVector = collisionNormal * (dot(relativeVelocity, collisionNormal));
-		vec3 forceVector = collisionVector * 1.0f / (1.0f / sphere1->m_mass + 1.0f / sphere2->m_mass);
+		float combinedMass = 1.0f / (1.0f / sphere1->m_mass + 1.0f / sphere2->m_mass);
+		vec3 forceVector = collisionVector * combinedMass;
 
+		// Collision Elasticity
+		float combinedElasticity = (sphere1->m_elasticity + sphere2->m_elasticity) / 2.0f;
+		forceVector *= combinedElasticity;
+
+		// Apply resultant vector to objects
 		float massRatio1 = sphere1->m_mass / (sphere1->m_mass + sphere2->m_mass);
 		float massRatio2 = sphere2->m_mass / (sphere1->m_mass + sphere2->m_mass);
-		sphere1->m_linearVelocity = forceVector * massRatio2 * 0.5f;
-		sphere2->m_linearVelocity = -forceVector * massRatio1 * 0.5f;
+		sphere1->m_linearVelocity += forceVector * massRatio2 * 0.5f;
+		sphere2->m_linearVelocity += -forceVector * massRatio1 * 0.5f;
 
-		//sphere1->ApplyForceToActor(sphere2, 2 * forceVector, ForceType::ACCELERATION);
+		// Apply rotational vector
+		vec3 collisionRadius = collisionNormal * sphere1->m_radius;
+		vec3 torqueVector = glm::normalize(glm::cross(glm::cross(relativeVelocity, collisionRadius), collisionRadius)) * sphere1->m_radius;
+		float torque = glm::dot(torqueVector, relativeVelocity) * combinedMass;
+		vec3 torqueDir = glm::normalize(glm::cross(collisionRadius, relativeVelocity));
 
-		//sphere1->ApplyForce(forceVector, ForceType::ACCELERATION);
-
+		// Move spheres apart
 		vec3 seperationVector = collisionNormal * intersection * 0.5f;
 		if (sphere1->m_physicsType == PhysicsType::DYNAMIC)
+		{
+			sphere1->ApplyTorque(-torque, torqueDir);
 			sphere1->m_position -= seperationVector * massRatio2;
+		}
 		if (sphere2->m_physicsType == PhysicsType::DYNAMIC)
+		{
+			sphere2->ApplyTorque(torque, torqueDir);
 			sphere2->m_position += seperationVector * massRatio1;
-
-
+		}
 
 		return true;
 	}
@@ -229,6 +251,11 @@ bool DIYPhysicScene::Sphere2Box(PhysicsObject * obj1, PhysicsObject * obj2)
 bool DIYPhysicScene::Sphere2Capsule(PhysicsObject * obj1, PhysicsObject * obj2)
 {
 
+	return false;
+}
+
+bool DIYPhysicScene::Sphere2Joint(PhysicsObject * obj1, PhysicsObject * obj2)
+{
 	return false;
 }
 
@@ -266,6 +293,11 @@ bool DIYPhysicScene::Box2Capsule(PhysicsObject * obj1, PhysicsObject * obj2)
 	return false;
 }
 
+bool DIYPhysicScene::Box2Joint(PhysicsObject * obj1, PhysicsObject * obj2)
+{
+	return false;
+}
+
 bool DIYPhysicScene::Capsule2Plane(PhysicsObject * obj1, PhysicsObject * obj2)
 {
 	// Use Plane2Capsule
@@ -285,6 +317,36 @@ bool DIYPhysicScene::Capsule2Box(PhysicsObject * obj1, PhysicsObject * obj2)
 }
 
 bool DIYPhysicScene::Capsule2Capsule(PhysicsObject * obj1, PhysicsObject * obj2)
+{
+	return false;
+}
+
+bool DIYPhysicScene::Capsule2Joint(PhysicsObject * obj1, PhysicsObject * obj2)
+{
+	return false;
+}
+
+bool DIYPhysicScene::Joint2Plane(PhysicsObject * obj1, PhysicsObject * obj2)
+{
+	return false;
+}
+
+bool DIYPhysicScene::Joint2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
+{
+	return false;
+}
+
+bool DIYPhysicScene::Joint2Box(PhysicsObject * obj1, PhysicsObject * obj2)
+{
+	return false;
+}
+
+bool DIYPhysicScene::Joint2Capsule(PhysicsObject * obj1, PhysicsObject * obj2)
+{
+	return false;
+}
+
+bool DIYPhysicScene::Joint2Joint(PhysicsObject * obj1, PhysicsObject * obj2)
 {
 	return false;
 }

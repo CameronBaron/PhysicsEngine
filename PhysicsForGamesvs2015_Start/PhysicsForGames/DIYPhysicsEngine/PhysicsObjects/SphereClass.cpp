@@ -6,10 +6,11 @@ SphereClass::SphereClass(vec3 position, vec3 velocity, float mass, float radius,
 	m_shapeID = ShapeType::SPHERE;
 	m_physicsType = PhysicsType::DYNAMIC;
 	m_color = colour;
+	m_linearDrag = 0.99f;
+	m_elasticity = 0.3f;
 }
 
 void SphereClass::MakeGizmo()
 {
-	//Gizmos::add2DCircle(m_position, m_radius, 10, vec4(1, 0, 0, 1));
 	Gizmos::addSphere(m_position, m_radius, 10, 10, m_color);
 }
