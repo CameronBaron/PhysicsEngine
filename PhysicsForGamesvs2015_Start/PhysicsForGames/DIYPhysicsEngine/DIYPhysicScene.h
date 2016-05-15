@@ -56,7 +56,7 @@ public:
 	static bool Joint2Joint(PhysicsObject* obj1, PhysicsObject* obj2);
 
 	vec3 gravity;
-	float timeStep;
+	float timeStep = 0;
 	std::vector<PhysicsObject*> actors;
 
 };

@@ -106,10 +106,10 @@ void DIYPhysicScene::CheckForCollision()
 			PhysicsObject* obj1 = actors[outer];
 			PhysicsObject* obj2 = actors[inner];
 
-			if (obj1->m_physicsType == PhysicsType::STATIC && obj2->m_physicsType == PhysicsType::STATIC)
+			if (obj1->m_shapeID == ShapeType::JOINT || obj2->m_shapeID == ShapeType::JOINT)
 				continue;
 
-			if (obj1->m_shapeID == ShapeType::JOINT || obj2->m_shapeID == ShapeType::JOINT)
+			if (obj1->m_physicsType == PhysicsType::STATIC && obj2->m_physicsType == PhysicsType::STATIC)
 				continue;
 
 			int _shapeID1 = obj1->m_shapeID;
@@ -215,8 +215,6 @@ bool DIYPhysicScene::Sphere2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
 		// Apply resultant vector to objects
 		float massRatio1 = sphere1->m_mass / (sphere1->m_mass + sphere2->m_mass);
 		float massRatio2 = sphere2->m_mass / (sphere1->m_mass + sphere2->m_mass);
-		sphere1->m_linearVelocity += forceVector * massRatio2 * 0.5f;
-		sphere2->m_linearVelocity += -forceVector * massRatio1 * 0.5f;
 
 		// Apply rotational vector
 		vec3 collisionRadius = collisionNormal * sphere1->m_radius;
@@ -228,11 +226,13 @@ bool DIYPhysicScene::Sphere2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
 		vec3 seperationVector = collisionNormal * intersection * 0.5f;
 		if (sphere1->m_physicsType == PhysicsType::DYNAMIC)
 		{
+			sphere1->m_linearVelocity += forceVector * massRatio2 * 0.5f;
 			sphere1->ApplyTorque(-torque, torqueDir);
 			sphere1->m_position -= seperationVector * massRatio2;
 		}
 		if (sphere2->m_physicsType == PhysicsType::DYNAMIC)
 		{
+			sphere2->m_linearVelocity += -forceVector * massRatio1 * 0.5f;
 			sphere2->ApplyTorque(torque, torqueDir);
 			sphere2->m_position += seperationVector * massRatio1;
 		}
