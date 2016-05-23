@@ -144,6 +144,41 @@ bool DIYPhysicScene::Plane2Box(PhysicsObject * obj1, PhysicsObject * obj2)
 	if (plane != nullptr && box != nullptr)
 	{
 		// Check for collision here
+		vec3 planeNormal = plane->m_normal;
+		float planeDist = plane->m_distance;
+		vec3 planePos = planeNormal * planeDist;
+
+		vec3 boxPos = box->m_position;
+
+		vec3 corners[8]
+		{
+			{boxPos + box->min}, // -,-,-
+			{boxPos + vec3(box->min.x, box->min.y, box->max.z)}, // -,-,+
+			{boxPos + vec3(box->max.x, box->min.y, box->max.z)}, // +,-,+
+			{boxPos + vec3(box->max.x, box->min.y, box->min.z)}, // +,-,-
+
+			{boxPos + box->max}, // +,+,+
+			{boxPos + vec3(box->max.x, box->max.y, box->min.z)}, // +,+,-
+			{boxPos + vec3(box->min.x, box->max.y, box->min.z)}, // -,+,-
+			{boxPos + vec3(box->min.x, box->max.y, box->max.z)}, // -,+,+
+		};
+
+		float closest = glm::dot(boxPos, planeNormal);
+		for (vec3 point : corners)
+		{
+			float pointToPlane = glm::dot(point, planeNormal);
+			if (pointToPlane < closest)
+				closest = pointToPlane;
+
+			if (closest < planeDist)
+			{
+				float intersection = planeDist - closest;
+				vec3 resultVector = -1 * box->m_mass * planeNormal * glm::dot(planeNormal, box->m_linearVelocity);
+				box->m_position += planeNormal * intersection;
+				box->ApplyForce(5 * resultVector, ForceType::ACCELERATION);
+				return true;
+			}
+		}
 	}
 
 	return false;
@@ -244,6 +279,11 @@ bool DIYPhysicScene::Sphere2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
 
 bool DIYPhysicScene::Sphere2Box(PhysicsObject * obj1, PhysicsObject * obj2)
 {
+	SphereClass* sphere = dynamic_cast<SphereClass*>(obj1);
+	BoxClass* box = dynamic_cast<BoxClass*>(obj2);
+	if (sphere == nullptr || box == nullptr)
+		return false;
+
 
 	return false;
 }
