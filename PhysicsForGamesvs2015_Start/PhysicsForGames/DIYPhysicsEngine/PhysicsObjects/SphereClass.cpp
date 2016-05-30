@@ -12,5 +12,6 @@ SphereClass::SphereClass(vec3 position, vec3 velocity, float mass, float radius,
 
 void SphereClass::MakeGizmo()
 {
-	Gizmos::addSphere(m_position, m_radius, 5, 5, m_color);
+	//Gizmos::addSphere(m_position, m_radius, 5, 5, m_color);
+	Gizmos::addSphereFilled(m_position, m_radius, 14, 14, m_color);
 }

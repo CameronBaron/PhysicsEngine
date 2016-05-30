@@ -10,7 +10,6 @@
 class DIYPhysicScene
 {
 public:
-
 	
 	DIYPhysicScene();
 	~DIYPhysicScene();
@@ -54,6 +53,9 @@ public:
 	static bool Joint2Box(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool Joint2Capsule(PhysicsObject* obj1, PhysicsObject* obj2);
 	static bool Joint2Joint(PhysicsObject* obj1, PhysicsObject* obj2);
+
+	static void Response(RigidBody* obj1, RigidBody* obj2, float overlap, vec3 normal);
+	static void Seperate(RigidBody* obj1, RigidBody* obj2, float overlap, vec3 normal);
 
 	vec3 gravity;
 	float timeStep = 0;

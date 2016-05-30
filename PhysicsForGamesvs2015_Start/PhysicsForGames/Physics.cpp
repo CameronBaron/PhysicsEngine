@@ -72,17 +72,25 @@ bool Physics::update()
 #pragma region Fire Spheres
 	fireTimer += dt;
 	rocketTimer += dt;
-	float mass = 30;
+	float mass = 20;
 
 	if (fireTimer > 0.5f && glfwGetKey(m_window, GLFW_KEY_SPACE) == GLFW_PRESS)
 	{
 		SphereClass* ballz;
-		float launchSpeed = 70;
-		ballz = new SphereClass( m_camera.getPosition() + m_camera.getForward(), m_camera.getForward() * launchSpeed, 5.0f, 3, vec4(0, 0, 0, 1));
+		float launchSpeed = 35;
+		ballz = new SphereClass( m_camera.getPosition() + m_camera.getForward(), m_camera.getForward() * launchSpeed, 5.0f, 0.5f, vec4(0, 0, 0, 1));
 		ballz->m_linearDrag = 0.99f;
 		ballz->m_elasticity = 0.9f;
 		physicsScene->AddActor(ballz);
 		fireTimer = 0;
+	}
+	boxCounter += dt;
+	if (boxCounter > boxTimer)
+	{
+		BoxClass* boxxy = new BoxClass(vec3(-10, 10, 0), vec3(2, 2, 2), vec3(0), quat(), 5);
+		physicsScene->AddActor(boxxy);
+		boxCounter = 0;
+		boxxy->m_elasticity = 0.2f;
 	}
 
 #pragma endregion	
@@ -183,21 +191,22 @@ void Physics::DIYPhysicsSetup()
 {
 	physicsScene = new DIYPhysicScene();
 	physicsScene->gravity = vec3(0, -10, 0);
-	physicsScene->timeStep = 0.001f;
+	physicsScene->timeStep = dt;
 	//add four balls to simulation
-	//plane = new Plane(vec3(0, 1, 0), -0.1f);
-	//physicsScene->AddActor(plane);
+	plane = new Plane(vec3(0, 1, 0), -0.1f);
+	physicsScene->AddActor(plane);
 
-	newBall = new SphereClass(vec3(0, 30, 0), vec3(0, 0, 0), 99999999.0f, 0.5f, vec4(1, 0, 0, 1));
-	newBall->m_physicsType = PhysicsType::STATIC;
+	//newBall = new SphereClass(vec3(0, 30, 0), vec3(0, 0, 0), FLT_MAX, 0.5f, vec4(1, 0, 0, 1));
+	//newBall->m_physicsType = PhysicsType::STATIC;
+	//
+	//physicsScene->AddActor(newBall);
 
-	physicsScene->AddActor(newBall);
+	float ballRadius = 0.09f;
+	float mass = 0.01f;
 
-	float ballRadius = 0.1f;
-	float mass = 1;
-
-	float bending = 1;
-
+	float damping = 0.02f;
+	float springCo = 5.0f;
+	
 	//SphereClass* ball2;
 	//int numberBalls = 20;
 	//for (int i = 0; i < numberBalls; i++)
@@ -210,85 +219,87 @@ void Physics::DIYPhysicsSetup()
 	//}
 
 #pragma region Cloth test
+	//int width = 10;
+	//for (int row = 0; row < width; row++)
+	//{
+	//	for (int col = 0; col < width; col++)
+	//	{
+	//		int index = row * width + col;
+	//		ballList[index] = new SphereClass(vec3(col * 0.5f, 5 + row * 0.5f, 0), vec3(0), mass, ballRadius, vec4(0, 1, 0, 1));
+	//		physicsScene->AddActor(ballList[index]);
+	//	}
+	//}
 
-	for (int row = 0; row < 10; row++)
-	{
-		for (int col = 0; col < 10; col++)
-		{
-			int index = row * 10 + col;
-			ballList[index] = new SphereClass(vec3(col, 0, -row), vec3(0), mass, ballRadius, vec4(0, 1, 0, 1));
-			physicsScene->AddActor(ballList[index]);
-		}
-	}
+	//ballList[90]->m_physicsType = PhysicsType::STATIC;
+	//ballList[90]->m_mass = FLT_MAX;
+	//ballList[90]->m_color = vec4(1, 0, 0, 1);
+	//ballList[99]->m_physicsType = PhysicsType::STATIC;
+	//ballList[99]->m_mass = FLT_MAX;
+	//ballList[99]->m_color = vec4(1, 0, 0, 1);
+	////ballList[90]->m_physicsType = PhysicsType::STATIC;
+	////ballList[90]->m_color = vec4(1, 0, 0, 1);
+	////ballList[99]->m_physicsType = PhysicsType::STATIC;
+	////ballList[99]->m_color = vec4(1, 0, 0, 1);
 
-	ballList[0]->m_physicsType = PhysicsType::STATIC;
-	ballList[0]->m_color = vec4(1, 0, 0, 1);
-	ballList[9]->m_physicsType = PhysicsType::STATIC;
-	ballList[9]->m_color = vec4(1, 0, 0, 1);
-	ballList[90]->m_physicsType = PhysicsType::STATIC;
-	ballList[90]->m_color = vec4(1, 0, 0, 1);
-	ballList[99]->m_physicsType = PhysicsType::STATIC;
-	ballList[99]->m_color = vec4(1, 0, 0, 1);
+	//for (int row = 0; row < width; row++)
+	//{
+	//	for (int col = 0; col < width; col++)
+	//	{
+	//		int index = row * width + col;
+	//		SpringJoint* spring;
+	//		//Bending Constraint
+	//		//Add springs to east + 2, south + 2, south-east + 2, south-west + 2
+	//		if (col < width - 2 && col % 2  == 0)
+	//		{
+	//			// east
+	//			spring = new SpringJoint(ballList[row * width + (col + 2)], ballList[index], springCo, damping);
+	//			physicsScene->AddActor(spring);
+	//			//if (row < width - 2)
+	//			//{
+	//			//	// south-east
+	//			//	spring = new SpringJoint(ballList[(row + 2) * width + (col + 2)], ballList[index], springCo, damping);
+	//			//	physicsScene->AddActor(spring);
+	//			//}
+	//		}
+	//		if (row < width - 2 && row % 2 == 0)
+	//		{
+	//			// south
+	//			spring = new SpringJoint(ballList[(row + 2) * width + col], ballList[index], springCo, damping);
+	//			physicsScene->AddActor(spring);
+	//			//if (col > width - 2)
+	//			//{
+	//			//	//south-west
+	//			//	spring = new SpringJoint(ballList[(row + 2) * width + (col - 2)], ballList[index], springCo, damping);
+	//			//	physicsScene->AddActor(spring);
+	//			//}
+	//		}
 
-	for (int row = 0; row < 10; row++)
-	{
-		for (int col = 0; col < 10; col++)
-		{
-			int index = row * 10 + col;
-			SpringJoint* spring;
-			// Bending Constraint
-			// Add springs to east + 2, south + 2, south-east + 2, south-west + 2
-			//if (col < 8)
-			//{
-			//	// east
-			//	spring = new SpringJoint(ballList[row * 10 + (col + 2)], ballList[index], bending, 0.99f);
-			//	physicsScene->AddActor(spring);
-			//	if (row < 8)
-			//	{
-			//		// south-east
-			//		spring = new SpringJoint(ballList[(row + 1) * 10 + (col + 2)], ballList[index], bending, 0.99f);
-			//		physicsScene->AddActor(spring);
-			//	}
-			//}
-			//if (row < 8)
-			//{
-			//	// south
-			//	spring = new SpringJoint(ballList[(row + 2) * 10 + col], ballList[index], bending, 0.99f);
-			//	physicsScene->AddActor(spring);
-			//	if (col > 1)
-			//	{
-			//		//south-west
-			//		spring = new SpringJoint(ballList[(row + 2) * 10 + (col - 2)], ballList[index], bending, 0.99f);
-			//		physicsScene->AddActor(spring);
-			//	}
-			//}
-
-			// Structural Constraint
-			// Add spring to the east (next) and south
-			if (col < 9)
-			{
-				spring = new SpringJoint(ballList[row * 10 + (col + 1)], ballList[index], 300, 0.99f);
-				physicsScene->AddActor(spring);
-				//if (row < 9)
-				//{
-				//	// south-east shear constraint
-				//	spring = new SpringJoint(ballList[(row + 1) * 10 + (col + 1)], ballList[index], 300, 0.99f);
-				//	physicsScene->AddActor(spring);
-				//}
-			}
-			if (row < 9)
-			{
-				spring = new SpringJoint(ballList[(row + 1) * 10 + col], ballList[index], 300, 0.99f);
-				physicsScene->AddActor(spring);
-				//if (col > 0)
-				//{
-				//	// south-west shear constraint
-				//	spring = new SpringJoint(ballList[(row + 1) * 10 + (col - 1)], ballList[index], 300, 0.99f);
-				//	physicsScene->AddActor(spring);
-				//}
-			}
-		}
-	}
+	//		// Structural Constraint
+	//		// Add spring to the east (next) and south
+	//		if (col < width - 1)
+	//		{
+	//			spring = new SpringJoint(ballList[row * width + (col + 1)], ballList[index], springCo, damping);
+	//			physicsScene->AddActor(spring);
+	//			if (row < width - 1)
+	//			{
+	//				// south-east shear constraint
+	//				spring = new SpringJoint(ballList[(row + 1) * width + (col + 1)], ballList[index], springCo, damping);
+	//				physicsScene->AddActor(spring);
+	//			}
+	//		}
+	//		if (row < width - 1)
+	//		{
+	//			spring = new SpringJoint(ballList[(row + 1) * width + col], ballList[index], springCo, damping);
+	//			physicsScene->AddActor(spring);
+	//			if (col > 0)
+	//			{
+	//				// south-west shear constraint
+	//				spring = new SpringJoint(ballList[(row + 1) * width + (col - 1)], ballList[index], springCo, damping);
+	//				physicsScene->AddActor(spring);
+	//			}
+	//		}
+	//	}
+	//}
 
 
 #pragma endregion

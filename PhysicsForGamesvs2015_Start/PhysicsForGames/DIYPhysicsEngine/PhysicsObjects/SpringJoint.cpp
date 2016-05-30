@@ -25,11 +25,12 @@ void SpringJoint::Update(vec3 gravity, float timeStep)
 
 	float force = (-k * X) - (b * v);
 	vec3 forceDir = glm::normalize(m_connections[0]->m_position - m_connections[1]->m_position);
-	
+
 	if (m_connections[0]->m_physicsType == PhysicsType::DYNAMIC)
 		m_connections[0]->ApplyForce(force * forceDir, ForceType::ACCELERATION);
 	if (m_connections[1]->m_physicsType == PhysicsType::DYNAMIC)
 		m_connections[1]->ApplyForce(-force * forceDir, ForceType::ACCELERATION);
+	Gizmos::addLine(m_connections[0]->m_position, m_connections[1]->m_position, vec4(0, 1, 0, 1));
 }
 
 void SpringJoint::Debug()

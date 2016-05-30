@@ -1,6 +1,6 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 //	Cameron Baron
-//	5/02/16
+//	02/05/16
 //	Use Unity RigidBody as reference http://docs.unity3d.com/ScriptReference/Rigidbody.html
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 #pragma once
@@ -23,6 +23,9 @@ public:
 	void ApplyForce(vec3 force, ForceType type, float time = 0);
 	void ApplyForceToActor(RigidBody* actor2, vec3 force, ForceType type);
 	void ApplyTorque(float torque, vec3 direction);
+	void AddVelocity(vec3 velocity);
+	void AddMomentum(vec3 momentum);
+	vec3 GetMomentum();
 
 	vec3 m_position;
 	vec3 m_linearVelocity;

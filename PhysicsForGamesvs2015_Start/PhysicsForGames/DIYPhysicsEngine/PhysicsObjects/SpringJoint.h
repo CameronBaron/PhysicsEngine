@@ -2,8 +2,7 @@
 #include "PhysicsObject.h"
 #include "RigidBody.h"
 
-class SpringJoint :
-	public PhysicsObject
+class SpringJoint : public PhysicsObject
 {
 public:
 	SpringJoint(RigidBody* connection1, RigidBody* connection2, float springCoefficient, float damping);

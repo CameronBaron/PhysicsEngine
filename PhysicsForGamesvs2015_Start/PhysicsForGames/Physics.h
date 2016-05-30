@@ -73,10 +73,12 @@ private:
 	Plane* plane;
 	float rocketTimer = 0;
 	float fireTimer = 0;
+	float boxTimer = 2;
+	float boxCounter = 0;
 
 	SpringJoint* joint;
 
-	SphereClass* ballList[100];
+	SphereClass* ballList[10*10];
 };
 
 
