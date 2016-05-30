@@ -328,7 +328,7 @@ bool DIYPhysicScene::Sphere2Box(PhysicsObject * obj1, PhysicsObject * obj2)
 	float overlap = glm::length(clampedDistance) - sphere->m_radius;
 	if (overlap < 0)
 	{
-		Response(box, sphere, overlap, glm::normalize(clampedDistance));
+		Response(box, sphere, -overlap, glm::normalize(distance));
 		return true;
 	}
 
@@ -461,16 +461,17 @@ void DIYPhysicScene::Response(RigidBody * obj1, RigidBody * obj2, float overlap,
 
 	const float coefficientOfRestitution = 0.5f;
 
-	vec3 relativeVel = obj1->m_linearVelocity - obj2->m_linearVelocity;
+	vec3 relativeVel = obj2->m_linearVelocity - obj1->m_linearVelocity;
 	float velocityAlongNormal = glm::dot(relativeVel, normal);
 	float impulseAmount = -(1 - coefficientOfRestitution) * velocityAlongNormal;
 	impulseAmount /= 1 / obj1->m_mass + 1 / obj2->m_mass;
+
 	float combinedElasticity = (obj1->m_elasticity + obj2->m_elasticity) / 2.0f;
-	vec3 impulse = impulseAmount * normal * combinedElasticity;
+	vec3 impulse = impulseAmount * normal;
 
 	// Apply change in momentum
-	obj1->AddMomentum(1 / obj1->m_mass * -impulse);
-	obj2->AddMomentum(1 / obj2->m_mass * impulse);
+	obj1->AddVelocity(1 / obj1->m_mass * -impulse);
+	obj2->AddVelocity(1 / obj2->m_mass * impulse);
 }
 
 void DIYPhysicScene::Seperate(RigidBody * obj1, RigidBody * obj2, float overlap, vec3 normal)
@@ -479,6 +480,7 @@ void DIYPhysicScene::Seperate(RigidBody * obj1, RigidBody * obj2, float overlap,
 	float massRatio1 = obj1->m_mass / totalMass;
 	float massRatio2 = obj2->m_mass / totalMass;
 
+	// Seperation relative to the objects
 	vec3 seperationVector = normal * overlap;
 	obj1->m_position += ( -seperationVector * massRatio2);
 	obj2->m_position += ( seperationVector * massRatio1);

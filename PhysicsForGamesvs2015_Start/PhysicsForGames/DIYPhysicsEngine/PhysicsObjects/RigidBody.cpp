@@ -41,7 +41,7 @@ void RigidBody::Update(vec3 a_gravity, float a_deltaTime)
 		}
 		else if (glm::length(m_linearVelocity) > MAX_LINEAR_THRESHOLD)
 		{
-			m_linearVelocity *= m_rotationalDrag;
+			//m_linearVelocity *= m_rotationalDrag;
 		}
 
 		// Add velocity to position
