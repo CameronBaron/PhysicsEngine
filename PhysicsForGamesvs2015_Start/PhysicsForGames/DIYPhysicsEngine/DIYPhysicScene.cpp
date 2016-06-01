@@ -284,12 +284,12 @@ bool DIYPhysicScene::Sphere2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
 		vec3 seperationVector = collisionNormal * intersection * 0.5f;
 		if (sphere1->m_physicsType == PhysicsType::DYNAMIC)
 		{
-			sphere1->AddMomentum(forceVector * massRatio2 * 0.5f);
+			sphere1->AddVelocity(forceVector * massRatio2 * 0.5f);
 			sphere1->m_position -= seperationVector * massRatio2;
 		}
 		if (sphere2->m_physicsType == PhysicsType::DYNAMIC)
 		{
-			sphere2->AddMomentum(-forceVector * massRatio1 * 0.5f);
+			sphere2->AddVelocity(-forceVector * massRatio1 * 0.5f);
 			sphere2->m_position += seperationVector * massRatio1;
 		}
 
