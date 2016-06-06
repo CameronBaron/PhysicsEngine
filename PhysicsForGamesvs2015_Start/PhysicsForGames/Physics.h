@@ -38,7 +38,7 @@ public:
     virtual bool update();
     virtual void draw();
 
-	void SetUpPhysX();
+	PxScene* SetUpPhysX();
 	void SetupVisualDebugger();
 	void UpdatePhysX(float deltaTime);
 
@@ -63,6 +63,7 @@ private:
 	PxMaterial* m_PhysicsMaterial;
 	PxMaterial* m_BoxMaterial;
 	PxCooking* m_PhysicsCooker;
+	PxControllerManager* m_ControllerManager;
 
 	DIYPhysicScene* physicsScene;
 
@@ -78,7 +79,7 @@ private:
 
 	SpringJoint* joint;
 
-	SphereClass* ballList[10*10];
+	//SphereClass* ballList[15*15];
 };
 
 

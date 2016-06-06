@@ -6,6 +6,7 @@
 
 #include "glm/ext.hpp"
 #include "glm/gtc/quaternion.hpp"
+#include <PxPhysicsAPI.h>
 
 #define Assert(val) if (val){}else{ *((char*)0) = 0;}
 #define ArrayCount(val) (sizeof(val)/sizeof(val[0]))
@@ -77,20 +78,21 @@ bool Physics::update()
 	if (fireTimer > 0.5f && glfwGetKey(m_window, GLFW_KEY_SPACE) == GLFW_PRESS)
 	{
 		SphereClass* ballz;
-		float launchSpeed = 35;
-		ballz = new SphereClass( m_camera.getPosition() + m_camera.getForward(), m_camera.getForward() * launchSpeed, 5.0f, 0.5f, vec4(0, 0, 0, 1));
+		float launchSpeed = 15;
+		ballz = new SphereClass( m_camera.getPosition() + m_camera.getForward(), m_camera.getForward() * launchSpeed, 0.5f, 0.9f, vec4(0, 0, 0, 1));
 		ballz->m_linearDrag = 0.99f;
 		ballz->m_elasticity = 0.9f;
 		physicsScene->AddActor(ballz);
 		fireTimer = 0;
 	}
 	boxCounter += dt;
-	if (boxCounter > boxTimer)
+	if (fireTimer > 0.5f && glfwGetKey(m_window, GLFW_KEY_G) == GLFW_PRESS)
 	{
-		BoxClass* boxxy = new BoxClass(vec3(-10, 10, 0), vec3(2, 2, 2), vec3(0), quat(), 5);
+		float launchSpeed = 15;
+		BoxClass* boxxy = new BoxClass(m_camera.getPosition() + m_camera.getForward(), vec3(2, 2, 2), m_camera.getForward() * launchSpeed, quat(), 0.5f);
 		physicsScene->AddActor(boxxy);
-		boxCounter = 0;
 		boxxy->m_elasticity = 0.2f;
+		fireTimer = 0;
 	}
 
 #pragma endregion	
@@ -98,6 +100,8 @@ bool Physics::update()
     m_camera.update(1.0f / 60.0f);
 
 	UpdatePhysX(dt);
+	renderGizmos(m_PhysicsScene);
+
 	physicsScene->Update(dt);
 	physicsScene->AddGizmos();
 
@@ -118,16 +122,18 @@ void Physics::draw()
     glfwPollEvents();
 }
 
-void Physics::SetUpPhysX()
+PxScene* Physics::SetUpPhysX()
 {
 	PxAllocatorCallback *myCallback = new myAllocator(); // pointer to memory manager
 	m_PhysicsFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, *myCallback, mDefaultErrorCallback); // PXfoundation singleton
 	m_Physics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_PhysicsFoundation, PxTolerancesScale()); // Physics system using foundation
 	PxInitExtensions(*m_Physics); // Init extension library
+	// Create cooker object, used to create complex mes and cloth colliders
+	m_PhysicsCooker = PxCreateCooking(PX_PHYSICS_VERSION, *m_PhysicsFoundation, PxCookingParams(PxTolerancesScale()));
 
 	//create physics material // Three parameters: Static Friction, Dynamic Friction, Restitution
 	// Restitution controls how "bouncy" an object is.
-	m_PhysicsMaterial = m_Physics->createMaterial(0.5f, 0.5f, 0.5f);
+	m_PhysicsMaterial = m_Physics->createMaterial(1, 1, 0);
 	// Create a scene description object: contains the parameters which control the scene
 	PxSceneDesc sceneDesc(m_Physics->getTolerancesScale());
 	// Set gravity
@@ -135,9 +141,11 @@ void Physics::SetUpPhysX()
 	// Callback function allows us to catch triggered events(enter trigger zones or collisions)
 	sceneDesc.filterShader = &physx::PxDefaultSimulationFilterShader;
 	// Tells PhysX we are using the CPU for PhysX calcs. (Can use GPU or multiple CPU cores)
-	sceneDesc.cpuDispatcher = PxDefaultCpuDispatcherCreate(1);
+	sceneDesc.cpuDispatcher = PxDefaultCpuDispatcherCreate(8);
 	// Create our PhysX scene
 	m_PhysicsScene = m_Physics->createScene(sceneDesc);
+
+	return m_PhysicsScene;
 }
 
 void Physics::SetupVisualDebugger()
@@ -180,6 +188,25 @@ void Physics::UpdatePhysX(float a_deltaTime)
 		counter = 0;
 	}
 
+	// Setup "Gun"
+	if (glfwGetKey(m_window, GLFW_KEY_B) == GLFW_PRESS)
+	{
+		vec3 cam_pos = m_camera.world[3].xyz();
+		vec3 box_vel = -m_camera.world[2].xyz() * 20.0f;
+		PxTransform box_transform(PxVec3(cam_pos.x, cam_pos.y, cam_pos.z));
+		// Geometry
+		PxSphereGeometry sphere(0.5f);
+		// Density
+		float density = 50;
+		float muzzleSpeed = 20;
+
+		PxRigidDynamic* new_actor = PxCreateDynamic(*m_Physics, box_transform, sphere, *m_PhysicsMaterial, density);
+		vec3 direction = (-m_camera.world[2].xyz());
+		PxVec3 velocity = PxVec3(direction.x, direction.y, direction.z) * muzzleSpeed;
+		new_actor->setLinearVelocity(velocity, true);
+		m_PhysicsScene->addActor(*new_actor);
+	}
+
 	m_PhysicsScene->simulate(a_deltaTime);
 	while (m_PhysicsScene->fetchResults() == false)
 	{
@@ -192,54 +219,53 @@ void Physics::DIYPhysicsSetup()
 	physicsScene = new DIYPhysicScene();
 	physicsScene->gravity = vec3(0, -10, 0);
 	physicsScene->timeStep = dt;
-	//add four balls to simulation
+
 	plane = new Plane(vec3(0, 1, 0), -0.1f);
 	physicsScene->AddActor(plane);
 
-	//newBall = new SphereClass(vec3(0, 30, 0), vec3(0, 0, 0), FLT_MAX, 0.5f, vec4(1, 0, 0, 1));
-	//newBall->m_physicsType = PhysicsType::STATIC;
-	//
-	//physicsScene->AddActor(newBall);
-
 	float ballRadius = 0.09f;
-	float mass = 0.01f;
+	float mass = 0.08f;
 
-	float damping = 0.02f;
-	float springCo = 5.0f;
+	float damping = 0.25f;
+	float springCo = 10.0f;
 	
-	//SphereClass* ball2;
-	//int numberBalls = 20;
-	//for (int i = 0; i < numberBalls; i++)
-	//{
-	//	ball2 = new SphereClass(vec3(i * 2.0f, 30, 0), vec3(0), mass, ballRadius, vec4(0, 1, 0, 1));
-	//	physicsScene->AddActor(ball2);
-	//	SpringJoint* spring = new SpringJoint(newBall, ball2, 40, 0.9999f);
-	//	physicsScene->AddActor(spring);
-	//	newBall = ball2;
-	//}
+	for (int i = 0; i < 10; i++)
+	{
+		SphereClass* ball2 = new SphereClass(vec3(i,i * 0.2f + 10, 0), vec3(0), mass, ballRadius, vec4(0, 1, 0, 1));
+		physicsScene->AddActor(ball2);
+		if (i > 0)
+		{
+			SpringJoint* spring = new SpringJoint(newBall, ball2, springCo, damping);
+			physicsScene->AddActor(spring);
+		}
+		newBall = ball2;
+	}
+	newBall->m_physicsType = PhysicsType::STATIC;
 
 #pragma region Cloth test
-	//int width = 10;
-	//for (int row = 0; row < width; row++)
-	//{
-	//	for (int col = 0; col < width; col++)
-	//	{
-	//		int index = row * width + col;
-	//		ballList[index] = new SphereClass(vec3(col * 0.5f, 5 + row * 0.5f, 0), vec3(0), mass, ballRadius, vec4(0, 1, 0, 1));
-	//		physicsScene->AddActor(ballList[index]);
-	//	}
-	//}
+	/*int width = 15;
+	for (int row = 0; row < width; row++)
+	{
+		for (int col = 0; col < width; col++)
+		{
+			int index = row * width + col;
+			ballList[index] = new SphereClass(vec3(col * 0.5f, 10, 5 + row * 0.5f), vec3(0), mass, ballRadius, vec4(0, 1, 0, 1));
+			physicsScene->AddActor(ballList[index]);
+		}
+	}
 
-	//ballList[90]->m_physicsType = PhysicsType::STATIC;
-	//ballList[90]->m_mass = FLT_MAX;
-	//ballList[90]->m_color = vec4(1, 0, 0, 1);
-	//ballList[99]->m_physicsType = PhysicsType::STATIC;
-	//ballList[99]->m_mass = FLT_MAX;
-	//ballList[99]->m_color = vec4(1, 0, 0, 1);
-	////ballList[90]->m_physicsType = PhysicsType::STATIC;
-	////ballList[90]->m_color = vec4(1, 0, 0, 1);
-	////ballList[99]->m_physicsType = PhysicsType::STATIC;
-	////ballList[99]->m_color = vec4(1, 0, 0, 1);
+	ballList[210]->m_physicsType = PhysicsType::STATIC;
+	ballList[210]->m_mass = FLT_MAX;
+	ballList[210]->m_color = vec4(1, 0, 0, 1);
+	ballList[224]->m_physicsType = PhysicsType::STATIC;
+	ballList[224]->m_mass = FLT_MAX;
+	ballList[224]->m_color = vec4(1, 0, 0, 1);
+	ballList[0]->m_physicsType = PhysicsType::STATIC;
+	ballList[0]->m_mass = FLT_MAX;
+	ballList[0]->m_color = vec4(1, 0, 0, 1);
+	ballList[14]->m_physicsType = PhysicsType::STATIC;
+	ballList[14]->m_mass = FLT_MAX;
+	ballList[14]->m_color = vec4(1, 0, 0, 1);*/
 
 	//for (int row = 0; row < width; row++)
 	//{
@@ -254,24 +280,24 @@ void Physics::DIYPhysicsSetup()
 	//			// east
 	//			spring = new SpringJoint(ballList[row * width + (col + 2)], ballList[index], springCo, damping);
 	//			physicsScene->AddActor(spring);
-	//			//if (row < width - 2)
-	//			//{
-	//			//	// south-east
-	//			//	spring = new SpringJoint(ballList[(row + 2) * width + (col + 2)], ballList[index], springCo, damping);
-	//			//	physicsScene->AddActor(spring);
-	//			//}
+	//			if (row < width - 2)
+	//			{
+	//				// south-east
+	//				spring = new SpringJoint(ballList[(row + 2) * width + (col + 2)], ballList[index], springCo, damping);
+	//				physicsScene->AddActor(spring);
+	//			}
 	//		}
 	//		if (row < width - 2 && row % 2 == 0)
 	//		{
 	//			// south
 	//			spring = new SpringJoint(ballList[(row + 2) * width + col], ballList[index], springCo, damping);
 	//			physicsScene->AddActor(spring);
-	//			//if (col > width - 2)
-	//			//{
-	//			//	//south-west
-	//			//	spring = new SpringJoint(ballList[(row + 2) * width + (col - 2)], ballList[index], springCo, damping);
-	//			//	physicsScene->AddActor(spring);
-	//			//}
+	//			if (col > width - 2)
+	//			{
+	//				//south-west
+	//				spring = new SpringJoint(ballList[(row + 2) * width + (col - 2)], ballList[index], springCo, damping);
+	//				physicsScene->AddActor(spring);
+	//			}
 	//		}
 
 	//		// Structural Constraint
@@ -303,8 +329,6 @@ void Physics::DIYPhysicsSetup()
 
 
 #pragma endregion
-
-	
 }
 
 void Physics::SetupTutorial1()
@@ -324,6 +348,7 @@ void Physics::SetupTutorial1()
 	
 	//add it to the physX scene
 	//m_PhysicsScene->addActor(*dynamicActor);
+
 }
 
 void AddWidget(PxShape* shape, PxRigidActor* actor, vec4 geo_color)

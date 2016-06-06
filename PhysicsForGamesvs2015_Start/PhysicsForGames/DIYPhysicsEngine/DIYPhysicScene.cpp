@@ -281,17 +281,7 @@ bool DIYPhysicScene::Sphere2Sphere(PhysicsObject * obj1, PhysicsObject * obj2)
 		float massRatio2 = sphere2->m_mass / (sphere1->m_mass + sphere2->m_mass);
 
 		// Move spheres apart
-		vec3 seperationVector = collisionNormal * intersection * 0.5f;
-		if (sphere1->m_physicsType == PhysicsType::DYNAMIC)
-		{
-			sphere1->AddVelocity(forceVector * massRatio2 * 0.5f);
-			sphere1->m_position -= seperationVector * massRatio2;
-		}
-		if (sphere2->m_physicsType == PhysicsType::DYNAMIC)
-		{
-			sphere2->AddVelocity(-forceVector * massRatio1 * 0.5f);
-			sphere2->m_position += seperationVector * massRatio1;
-		}
+		Response(sphere2, sphere1, -intersection, glm::normalize(delta));
 
 		return true;
 	}
@@ -337,7 +327,6 @@ bool DIYPhysicScene::Sphere2Box(PhysicsObject * obj1, PhysicsObject * obj2)
 
 bool DIYPhysicScene::Sphere2Capsule(PhysicsObject * obj1, PhysicsObject * obj2)
 {
-
 	return false;
 }
 
@@ -381,8 +370,10 @@ bool DIYPhysicScene::Box2Box(PhysicsObject * obj1, PhysicsObject * obj2)
 			vec3 seperationNormal(0);
 
 			if (xOverlap == minOverlap) seperationNormal.x = std::signbit(boxDelta.x) ? -1.0f : 1.0f;
-			else if (yOverlap == minOverlap) seperationNormal.y = std::signbit(boxDelta.y) ? -1.0f : 1.0f;
-			else if (zOverlap == minOverlap) seperationNormal.z = std::signbit(boxDelta.z) ? -1.0f : 1.0f;
+			if (yOverlap == minOverlap) seperationNormal.y = std::signbit(boxDelta.y) ? -1.0f : 1.0f;
+			if (zOverlap == minOverlap) seperationNormal.z = std::signbit(boxDelta.z) ? -1.0f : 1.0f;
+
+			glm::normalize(seperationNormal);
 
 			Response(box1, box2, -minOverlap, seperationNormal);
 			return true;
@@ -459,19 +450,21 @@ void DIYPhysicScene::Response(RigidBody * obj1, RigidBody * obj2, float overlap,
 {
 	Seperate(obj1, obj2, overlap, normal);
 
-	const float coefficientOfRestitution = 0.5f;
+	const float coefficientOfRestitution = 0.9f;
 
 	vec3 relativeVel = obj2->m_linearVelocity - obj1->m_linearVelocity;
 	float velocityAlongNormal = glm::dot(relativeVel, normal);
 	float impulseAmount = -(1 - coefficientOfRestitution) * velocityAlongNormal;
 	impulseAmount /= 1 / obj1->m_mass + 1 / obj2->m_mass;
 
-	float combinedElasticity = (obj1->m_elasticity + obj2->m_elasticity) / 2.0f;
+	//float combinedElasticity = (obj1->m_elasticity + obj2->m_elasticity) / 2.0f;
 	vec3 impulse = impulseAmount * normal;
 
 	// Apply change in momentum
-	obj1->AddVelocity(1 / obj1->m_mass * -impulse);
-	obj2->AddVelocity(1 / obj2->m_mass * impulse);
+	if (obj1->m_physicsType != PhysicsType::STATIC)
+		obj1->AddVelocity(1 / obj1->m_mass * -impulse);
+	if (obj2->m_physicsType != PhysicsType::STATIC)
+		obj2->AddVelocity(1 / obj2->m_mass * impulse);
 }
 
 void DIYPhysicScene::Seperate(RigidBody * obj1, RigidBody * obj2, float overlap, vec3 normal)
@@ -482,6 +475,8 @@ void DIYPhysicScene::Seperate(RigidBody * obj1, RigidBody * obj2, float overlap,
 
 	// Seperation relative to the objects
 	vec3 seperationVector = normal * overlap;
-	obj1->m_position += ( -seperationVector * massRatio2);
-	obj2->m_position += ( seperationVector * massRatio1);
+	if (obj1->m_physicsType != PhysicsType::STATIC)
+		obj1->m_position += ( -seperationVector * massRatio2);
+	if (obj2->m_physicsType != PhysicsType::STATIC)
+		obj2->m_position += ( seperationVector * massRatio1);
 }

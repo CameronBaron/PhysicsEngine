@@ -6,7 +6,7 @@ SpringJoint::SpringJoint(RigidBody * a_connection1, RigidBody * a_connection2, f
 	m_connections[1] = a_connection2;
 	m_springCoefficient = a_springCoefficient;
 	m_damping = a_damping;
-	m_restLength = glm::length(m_connections[0]->m_position - m_connections[1]->m_position);
+	m_restLength = glm::length(m_connections[0]->m_position - m_connections[1]->m_position) - 0.2f;
 	m_shapeID = ShapeType::JOINT;
 }
 
@@ -23,7 +23,7 @@ void SpringJoint::Update(vec3 gravity, float timeStep)
 	// v = relative velocity
 	float v = glm::length(m_connections[0]->m_linearVelocity - m_connections[1]->m_linearVelocity);
 
-	float force = (-k * X) - (b * v);
+	float force = (-k * X);//- (b * v);
 	vec3 forceDir = glm::normalize(m_connections[0]->m_position - m_connections[1]->m_position);
 
 	if (m_connections[0]->m_physicsType == PhysicsType::DYNAMIC)
