@@ -400,20 +400,21 @@ void Physics::SetupTutorial1()
 	bool perParticleRestOffSet = false;
 	pf = m_Physics->createParticleFluid(maxParticles, perParticleRestOffSet);
 
-	pf->setRestParticleDistance(0.7f);
-	pf->setDynamicFriction(0.01f);
+	pf->setViscosity(0.9f);
+	pf->setRestParticleDistance(0.5f);
+	pf->setDynamicFriction(0.1f);
 	pf->setStaticFriction(0.1f);
-	pf->setDamping(0.1f);
-	pf->setParticleMass(0.1f);
+	pf->setDamping(0);
+	pf->setParticleMass(0.6f);
 	pf->setRestitution(0);
 	pf->setParticleBaseFlag(PxParticleBaseFlag::eCOLLISION_TWOWAY, true);
-	pf->setStiffness(80);
+	pf->setStiffness(100);
 
 	if (pf)
 	{
 		m_PhysicsScene->addActor(*pf);
-		m_particleEmitter = new ParticleFluidEmitter(maxParticles, PxVec3(20, 10, 0), pf, 0.1f);
-		m_particleEmitter->setStartVelocityRange(-0.001f, -250.0f, -0.001f, 0.001f, -250.0f, 0.001f);
+		m_particleEmitter = new ParticleFluidEmitter(maxParticles, PxVec3(20, 10, 0), pf, 0.01f);
+		m_particleEmitter->setStartVelocityRange(-0.001f, -250.0f, -200.0f, 0.001f, -250.0f, 0.001f);
 	}
 
 	//add a box
