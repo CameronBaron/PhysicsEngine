@@ -11,6 +11,8 @@
 #include <PxPhysicsAPI.h>
 #include <PxScene.h>
 #include <pvd/PxVisualDebugger.h>
+#include <list>
+#include "ParticleEmitter.h"
 
 using namespace physx;
 
@@ -65,6 +67,8 @@ private:
 	PxCooking* m_PhysicsCooker;
 	PxControllerManager* m_ControllerManager;
 
+	ParticleEmitter* m_particleEmitter;
+
 	DIYPhysicScene* physicsScene;
 
 	float counter = 0;
@@ -81,7 +85,5 @@ private:
 
 	//SphereClass* ballList[15*15];
 };
-
-
 
 #endif //CAM_PROJ_H_

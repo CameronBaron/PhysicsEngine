@@ -102,6 +102,12 @@ bool Physics::update()
 	UpdatePhysX(dt);
 	renderGizmos(m_PhysicsScene);
 
+	if (m_particleEmitter)
+	{
+		m_particleEmitter->update(dt);
+		m_particleEmitter->renderParticles();
+	}
+
 	physicsScene->Update(dt);
 	physicsScene->AddGizmos();
 
@@ -117,7 +123,10 @@ void Physics::draw()
     Gizmos::draw(m_camera.proj, m_camera.view);
 
     m_renderer->RenderAndClear(m_camera.view_proj);
-
+	//if (m_particleEmitter)
+	//{
+	//	m_particleEmitter->renderParticles();
+	//}
     glfwSwapBuffers(m_window);
     glfwPollEvents();
 }
@@ -143,7 +152,7 @@ PxScene* Physics::SetUpPhysX()
 	// Tells PhysX we are using the CPU for PhysX calcs. (Can use GPU or multiple CPU cores)
 	sceneDesc.cpuDispatcher = PxDefaultCpuDispatcherCreate(8);
 	// Create our PhysX scene
-	m_PhysicsScene = m_Physics->createScene(sceneDesc);	
+	m_PhysicsScene = m_Physics->createScene(sceneDesc);
 
 	RagDoll* ragdoll = new RagDoll();
 	PxArticulation* ragDollArticulation;
@@ -354,8 +363,49 @@ void Physics::SetupTutorial1()
 	PxTransform pose = PxTransform(PxVec3(0.0f, 0, 0.0f), PxQuat(PxHalfPi * 1.0f, PxVec3(0.0f, 0.0f, 1.0f)));
 	PxRigidStatic* plane = PxCreateStatic(*m_Physics, pose, PxPlaneGeometry(), *m_PhysicsMaterial);
 
+	const PxU32 numShapes = plane->getNbShapes();
 	// add it to the physX scene
 	m_PhysicsScene->addActor(*plane);
+
+// Fluid dynamics
+	PxBoxGeometry side1(4.5f, 1, 0.5f);
+	PxBoxGeometry side2(0.5f, 1, 4.5f);
+	
+	pose = PxTransform(PxVec3(20.0f, 0.5f, 4.0f));
+	PxRigidStatic* box = PxCreateStatic(*m_Physics, pose, side1, *m_PhysicsMaterial);
+	m_PhysicsScene->addActor(*box);
+	//m_physXActors.push_back(box);
+
+	pose = PxTransform(PxVec3(20.0f, 0.5f, -4.0f));
+	box = PxCreateStatic(*m_Physics, pose, side1, *m_PhysicsMaterial);
+	m_PhysicsScene->addActor(*box);
+
+	pose = PxTransform(PxVec3(24.0f, 0.5f, 0));
+	box = PxCreateStatic(*m_Physics, pose, side2, *m_PhysicsMaterial);
+	m_PhysicsScene->addActor(*box);
+
+	pose = PxTransform(PxVec3(16.0f, 0.5f, 0));
+	box = PxCreateStatic(*m_Physics, pose, side2, *m_PhysicsMaterial);
+	m_PhysicsScene->addActor(*box);
+
+	PxParticleSystem* pf;
+
+	// create particle system in PhysX SDX
+	// set immutable properties
+	PxU32 maxParticles = 4000;
+	bool perParticleRestOffSet = false;
+	pf = m_Physics->createParticleSystem(maxParticles, perParticleRestOffSet);
+	pf->setDamping(0.1f);
+	pf->setParticleMass(0.1f);
+	pf->setRestitution(0);
+	pf->setParticleBaseFlag(PxParticleBaseFlag::eCOLLISION_TWOWAY, true);
+
+	if (pf)
+	{
+		m_PhysicsScene->addActor(*pf);
+		m_particleEmitter = new ParticleEmitter(maxParticles, PxVec3(20, 10, 0), pf, 0.1f);
+		m_particleEmitter->setStartVelocityRange(-2.0f, 0, -2.0f, 2.0f, 0.0f, 2.0f);
+	}
 
 	//add a box
 	//float density = 10;
