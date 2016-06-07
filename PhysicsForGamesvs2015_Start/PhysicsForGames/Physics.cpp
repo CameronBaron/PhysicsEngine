@@ -203,7 +203,7 @@ void Physics::UpdatePhysX(float a_deltaTime)
 	}
 
 	// Setup "Gun"
-	if (glfwGetKey(m_window, GLFW_KEY_B) == GLFW_PRESS)
+	if (glfwGetKey(m_window, GLFW_KEY_B) == GLFW_PRESS && !firing)
 	{
 		vec3 cam_pos = m_camera.world[3].xyz();
 		vec3 box_vel = -m_camera.world[2].xyz() * 20.0f;
@@ -219,7 +219,11 @@ void Physics::UpdatePhysX(float a_deltaTime)
 		PxVec3 velocity = PxVec3(direction.x, direction.y, direction.z) * muzzleSpeed;
 		new_actor->setLinearVelocity(velocity, true);
 		m_PhysicsScene->addActor(*new_actor);
+		firing = true;
 	}
+
+	if (glfwGetKey(m_window, GLFW_KEY_B) != GLFW_PRESS)
+		firing = false;
 
 	//if (glfwGetKey(m_window, GLFW_KEY_R) == GLFW_PRESS)
 	//{
@@ -388,23 +392,28 @@ void Physics::SetupTutorial1()
 	box = PxCreateStatic(*m_Physics, pose, side2, *m_PhysicsMaterial);
 	m_PhysicsScene->addActor(*box);
 
-	PxParticleSystem* pf;
+	PxParticleFluid* pf;
 
 	// create particle system in PhysX SDX
 	// set immutable properties
 	PxU32 maxParticles = 4000;
 	bool perParticleRestOffSet = false;
-	pf = m_Physics->createParticleSystem(maxParticles, perParticleRestOffSet);
+	pf = m_Physics->createParticleFluid(maxParticles, perParticleRestOffSet);
+
+	pf->setRestParticleDistance(0.7f);
+	pf->setDynamicFriction(0.01f);
+	pf->setStaticFriction(0.1f);
 	pf->setDamping(0.1f);
 	pf->setParticleMass(0.1f);
 	pf->setRestitution(0);
 	pf->setParticleBaseFlag(PxParticleBaseFlag::eCOLLISION_TWOWAY, true);
+	pf->setStiffness(80);
 
 	if (pf)
 	{
 		m_PhysicsScene->addActor(*pf);
-		m_particleEmitter = new ParticleEmitter(maxParticles, PxVec3(20, 10, 0), pf, 0.1f);
-		m_particleEmitter->setStartVelocityRange(-2.0f, 0, -2.0f, 2.0f, 0.0f, 2.0f);
+		m_particleEmitter = new ParticleFluidEmitter(maxParticles, PxVec3(20, 10, 0), pf, 0.1f);
+		m_particleEmitter->setStartVelocityRange(-0.001f, -250.0f, -0.001f, 0.001f, -250.0f, 0.001f);
 	}
 
 	//add a box

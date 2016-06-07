@@ -13,6 +13,7 @@
 #include <pvd/PxVisualDebugger.h>
 #include <list>
 #include "ParticleEmitter.h"
+#include "ParticleFluidEmitter.h"
 
 using namespace physx;
 
@@ -67,7 +68,7 @@ private:
 	PxCooking* m_PhysicsCooker;
 	PxControllerManager* m_ControllerManager;
 
-	ParticleEmitter* m_particleEmitter;
+	ParticleFluidEmitter* m_particleEmitter;
 
 	DIYPhysicScene* physicsScene;
 
@@ -84,6 +85,7 @@ private:
 	SpringJoint* joint;
 
 	//SphereClass* ballList[15*15];
+	bool firing = false;
 };
 
 #endif //CAM_PROJ_H_
