@@ -165,6 +165,7 @@
     <ClInclude Include="DIYPhysicsEngine\PhysicsObjects\PhysicsObject.h" />
     <ClInclude Include="DIYPhysicsEngine\PhysicsObjects\RigidBody.h" />
     <ClInclude Include="DIYPhysicsEngine\PhysicsObjects\SphereClass.h" />
+    <ClInclude Include="RagDoll.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stb_image.h" />
@@ -185,6 +186,7 @@
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="DIYPhysicsEngine\PhysicsObjects\RigidBody.cpp" />
     <ClCompile Include="DIYPhysicsEngine\PhysicsObjects\SphereClass.cpp" />
+    <ClCompile Include="RagDoll.cpp" />
     <ClCompile Include="Renderer.cpp" />
   </ItemGroup>
   <ItemGroup>

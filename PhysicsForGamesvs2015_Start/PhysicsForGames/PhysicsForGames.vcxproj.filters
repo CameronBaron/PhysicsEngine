@@ -72,6 +72,9 @@
     <ClInclude Include="DIYPhysicsEngine\PhysicsObjects\SpringJoint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="RagDoll.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -117,6 +120,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DIYPhysicsEngine\PhysicsObjects\SpringJoint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RagDoll.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

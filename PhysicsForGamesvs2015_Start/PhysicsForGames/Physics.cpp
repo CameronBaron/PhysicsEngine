@@ -6,7 +6,7 @@
 
 #include "glm/ext.hpp"
 #include "glm/gtc/quaternion.hpp"
-#include <PxPhysicsAPI.h>
+#include "RagDoll.h"
 
 #define Assert(val) if (val){}else{ *((char*)0) = 0;}
 #define ArrayCount(val) (sizeof(val)/sizeof(val[0]))
@@ -143,7 +143,12 @@ PxScene* Physics::SetUpPhysX()
 	// Tells PhysX we are using the CPU for PhysX calcs. (Can use GPU or multiple CPU cores)
 	sceneDesc.cpuDispatcher = PxDefaultCpuDispatcherCreate(8);
 	// Create our PhysX scene
-	m_PhysicsScene = m_Physics->createScene(sceneDesc);
+	m_PhysicsScene = m_Physics->createScene(sceneDesc);	
+
+	RagDoll* ragdoll = new RagDoll();
+	PxArticulation* ragDollArticulation;
+	ragDollArticulation = ragdoll->MakeRagDoll(m_Physics, ragdoll->ragDollData, PxTransform(PxVec3(5, 5, 0)), 0.1f, m_PhysicsMaterial);
+	m_PhysicsScene->addArticulation(*ragDollArticulation);
 
 	return m_PhysicsScene;
 }
@@ -206,6 +211,18 @@ void Physics::UpdatePhysX(float a_deltaTime)
 		new_actor->setLinearVelocity(velocity, true);
 		m_PhysicsScene->addActor(*new_actor);
 	}
+
+	//if (glfwGetKey(m_window, GLFW_KEY_R) == GLFW_PRESS)
+	//{
+	//	vec3 cam_pos = m_camera.world[3].xyz();
+	//	vec3 box_vel = -m_camera.world[2].xyz() * 20.0f;
+	//	PxTransform transform(PxVec3(cam_pos.x, cam_pos.y, cam_pos.z));
+	//
+	//	RagDoll* ragdoll = new RagDoll();
+	//	PxArticulation* ragDollArticulation;
+	//	ragDollArticulation = ragdoll->MakeRagDoll(m_Physics, ragdoll->ragDollData, transform, 0.1f, m_PhysicsMaterial);
+	//	m_PhysicsScene->addArticulation(*ragDollArticulation);
+	//}
 
 	m_PhysicsScene->simulate(a_deltaTime);
 	while (m_PhysicsScene->fetchResults() == false)
