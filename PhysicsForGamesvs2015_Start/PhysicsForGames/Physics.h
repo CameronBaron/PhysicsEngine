@@ -48,6 +48,11 @@ public:
 	void DIYPhysicsSetup();
 
 	void SetupTutorial1();
+	void SetupCSHTutorial();
+	void UpdateCSHTutorial();
+
+	Scene m_scene;
+	mat4 m_tank_transform;
 
 	void renderGizmos(PxScene* physics_scene);
 

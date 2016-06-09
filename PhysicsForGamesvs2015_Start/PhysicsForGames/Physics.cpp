@@ -32,7 +32,8 @@ bool Physics::startup()
 	SetUpPhysX();
 	SetupVisualDebugger();
 	SetupTutorial1();
-	DIYPhysicsSetup();
+	SetupCSHTutorial();
+	//DIYPhysicsSetup();
 	
     return true;
 }
@@ -100,17 +101,17 @@ bool Physics::update()
     m_camera.update(1.0f / 60.0f);
 
 	UpdatePhysX(dt);
+	//physicsScene->Update(dt);
+	//physicsScene->AddGizmos();
+	UpdateCSHTutorial();
+
+	//if (m_particleEmitter)
+	//{
+	//	m_particleEmitter->update(dt);
+	//	m_particleEmitter->renderParticles();
+	//}
+
 	renderGizmos(m_PhysicsScene);
-
-	if (m_particleEmitter)
-	{
-		m_particleEmitter->update(dt);
-		m_particleEmitter->renderParticles();
-	}
-
-	physicsScene->Update(dt);
-	physicsScene->AddGizmos();
-
 	dt = (float)glfwGetTime();
 
     return true;
@@ -123,10 +124,7 @@ void Physics::draw()
     Gizmos::draw(m_camera.proj, m_camera.view);
 
     m_renderer->RenderAndClear(m_camera.view_proj);
-	//if (m_particleEmitter)
-	//{
-	//	m_particleEmitter->renderParticles();
-	//}
+
     glfwSwapBuffers(m_window);
     glfwPollEvents();
 }
@@ -154,10 +152,10 @@ PxScene* Physics::SetUpPhysX()
 	// Create our PhysX scene
 	m_PhysicsScene = m_Physics->createScene(sceneDesc);
 
-	RagDoll* ragdoll = new RagDoll();
-	PxArticulation* ragDollArticulation;
-	ragDollArticulation = ragdoll->MakeRagDoll(m_Physics, ragdoll->ragDollData, PxTransform(PxVec3(5, 5, 0)), 0.1f, m_PhysicsMaterial);
-	m_PhysicsScene->addArticulation(*ragDollArticulation);
+	//RagDoll* ragdoll = new RagDoll();
+	//PxArticulation* ragDollArticulation;
+	//ragDollArticulation = ragdoll->MakeRagDoll(m_Physics, ragdoll->ragDollData, PxTransform(PxVec3(5, 5, 0)), 0.1f, m_PhysicsMaterial);
+	//m_PhysicsScene->addArticulation(*ragDollArticulation);
 
 	return m_PhysicsScene;
 }
@@ -188,19 +186,19 @@ void Physics::UpdatePhysX(float a_deltaTime)
 	}
 	counter += a_deltaTime;
 	
-	if (counter >= 2)
-	{
-		float density = 10;
+	//if (counter >= 2)
+	//{
+	//	float density = 10;
 
-		PxBoxGeometry box(2, 2, 2);
-		PxTransform transform(PxVec3(0, 50, 0));
-		PxRigidDynamic* dynamicActor = PxCreateDynamic(*m_Physics, transform, box, *m_PhysicsMaterial, density);
-		//dynamicActor->addForce(PxVec3(0, 50, 0), PxForceMode::eIMPULSE);
-		PxRigidBodyExt::updateMassAndInertia(*dynamicActor, density);
+	//	PxBoxGeometry box(2, 2, 2);
+	//	PxTransform transform(PxVec3(0, 50, 0));
+	//	PxRigidDynamic* dynamicActor = PxCreateDynamic(*m_Physics, transform, box, *m_PhysicsMaterial, density);
+	//	//dynamicActor->addForce(PxVec3(0, 50, 0), PxForceMode::eIMPULSE);
+	//	PxRigidBodyExt::updateMassAndInertia(*dynamicActor, density);
 
-		m_PhysicsScene->addActor(*dynamicActor);
-		counter = 0;
-	}
+	//	m_PhysicsScene->addActor(*dynamicActor);
+	//	counter = 0;
+	//}
 
 	// Setup "Gun"
 	if (glfwGetKey(m_window, GLFW_KEY_B) == GLFW_PRESS && !firing)
@@ -371,52 +369,53 @@ void Physics::SetupTutorial1()
 	// add it to the physX scene
 	m_PhysicsScene->addActor(*plane);
 
-// Fluid dynamics
-	PxBoxGeometry side1(4.5f, 1, 0.5f);
-	PxBoxGeometry side2(0.5f, 1, 4.5f);
+#pragma region Fluid dynamics
+	//PxBoxGeometry side1(4.5f, 1, 0.5f);
+	//PxBoxGeometry side2(0.5f, 1, 4.5f);
+	//
+	//pose = PxTransform(PxVec3(20.0f, 0.5f, 4.0f));
+	//PxRigidStatic* box = PxCreateStatic(*m_Physics, pose, side1, *m_PhysicsMaterial);
+	//m_PhysicsScene->addActor(*box);
+	////m_physXActors.push_back(box);
 	
-	pose = PxTransform(PxVec3(20.0f, 0.5f, 4.0f));
-	PxRigidStatic* box = PxCreateStatic(*m_Physics, pose, side1, *m_PhysicsMaterial);
-	m_PhysicsScene->addActor(*box);
-	//m_physXActors.push_back(box);
-
-	pose = PxTransform(PxVec3(20.0f, 0.5f, -4.0f));
-	box = PxCreateStatic(*m_Physics, pose, side1, *m_PhysicsMaterial);
-	m_PhysicsScene->addActor(*box);
-
-	pose = PxTransform(PxVec3(24.0f, 0.5f, 0));
-	box = PxCreateStatic(*m_Physics, pose, side2, *m_PhysicsMaterial);
-	m_PhysicsScene->addActor(*box);
-
-	pose = PxTransform(PxVec3(16.0f, 0.5f, 0));
-	box = PxCreateStatic(*m_Physics, pose, side2, *m_PhysicsMaterial);
-	m_PhysicsScene->addActor(*box);
-
-	PxParticleFluid* pf;
-
-	// create particle system in PhysX SDX
-	// set immutable properties
-	PxU32 maxParticles = 4000;
-	bool perParticleRestOffSet = false;
-	pf = m_Physics->createParticleFluid(maxParticles, perParticleRestOffSet);
-
-	pf->setViscosity(0.9f);
-	pf->setRestParticleDistance(0.5f);
-	pf->setDynamicFriction(0.1f);
-	pf->setStaticFriction(0.1f);
-	pf->setDamping(0);
-	pf->setParticleMass(0.6f);
-	pf->setRestitution(0);
-	pf->setParticleBaseFlag(PxParticleBaseFlag::eCOLLISION_TWOWAY, true);
-	pf->setStiffness(100);
-
-	if (pf)
-	{
-		m_PhysicsScene->addActor(*pf);
-		m_particleEmitter = new ParticleFluidEmitter(maxParticles, PxVec3(20, 10, 0), pf, 0.01f);
-		m_particleEmitter->setStartVelocityRange(-0.001f, -250.0f, -200.0f, 0.001f, -250.0f, 0.001f);
-	}
-
+	//pose = PxTransform(PxVec3(20.0f, 0.5f, -4.0f));
+	//box = PxCreateStatic(*m_Physics, pose, side1, *m_PhysicsMaterial);
+	//m_PhysicsScene->addActor(*box);
+	
+	//pose = PxTransform(PxVec3(24.0f, 0.5f, 0));
+	//box = PxCreateStatic(*m_Physics, pose, side2, *m_PhysicsMaterial);
+	//m_PhysicsScene->addActor(*box);
+	
+	//pose = PxTransform(PxVec3(16.0f, 0.5f, 0));
+	//box = PxCreateStatic(*m_Physics, pose, side2, *m_PhysicsMaterial);
+	//m_PhysicsScene->addActor(*box);
+	
+	//PxParticleFluid* pf;
+	
+	//// create particle system in PhysX SDX
+	//// set immutable properties
+	//PxU32 maxParticles = 4000;
+	//bool perParticleRestOffSet = false;
+	//pf = m_Physics->createParticleFluid(maxParticles, perParticleRestOffSet);
+	
+	//pf->setViscosity(0.9f);
+	//pf->setRestParticleDistance(0.5f);
+	//pf->setDynamicFriction(0.1f);
+	//pf->setStaticFriction(0.1f);
+	//pf->setDamping(0);
+	//pf->setParticleMass(0.6f);
+	//pf->setRestitution(0);
+	//pf->setParticleBaseFlag(PxParticleBaseFlag::eCOLLISION_TWOWAY, true);
+	//pf->setStiffness(100);
+	
+	//if (pf)
+	//{
+	//	m_PhysicsScene->addActor(*pf);
+	//	m_particleEmitter = new ParticleFluidEmitter(maxParticles, PxVec3(20, 10, 0), pf, 0.01f);
+	//	m_particleEmitter->setStartVelocityRange(-0.001f, -250.0f, -200.0f, 0.001f, -250.0f, 0.001f);
+	//}
+#pragma endregion
+	
 	//add a box
 	//float density = 10;
 	//PxBoxGeometry box(2, 2, 2);
@@ -426,6 +425,60 @@ void Physics::SetupTutorial1()
 	//add it to the physX scene
 	//m_PhysicsScene->addActor(*dynamicActor);
 
+}
+
+void Physics::SetupCSHTutorial()
+{
+	m_scene = LoadSceneFromOBJ("./data/tank/", "battle_tank.obj");
+
+	PxTransform relativePose;
+	PxBoxGeometry box;
+
+	// tank base
+	box = PxBoxGeometry(1, 1, 2);
+
+	PxTransform transform(*(PxMat44*)(&m_tank_transform[0]));
+	PxRigidDynamic* tank_actor = PxCreateDynamic(*m_Physics, transform, box, *m_PhysicsMaterial, 10);
+
+	int numberShapes = tank_actor->getNbShapes();
+	PxShape* shapes;
+	tank_actor->getShapes(&shapes, numberShapes);
+	relativePose = PxTransform(PxVec3(0, 1, 0));	
+	shapes->setGeometry(box);
+	shapes->setLocalPose(relativePose);
+
+	// turret
+
+
+	tank_actor->userData = &box;
+	m_PhysicsScene->addActor(*tank_actor);
+
+	
+}
+
+void Physics::UpdateCSHTutorial()
+{
+	PxActorTypeFlags flags = PxActorTypeFlag::eRIGID_DYNAMIC;
+	int actor_count = m_PhysicsScene->getNbActors(flags);
+
+	for (int i = 0; i < actor_count; ++i)
+	{
+		PxActor* actor;
+		m_PhysicsScene->getActors(flags, &actor, 1, i);
+
+		if (actor->userData)
+		{
+			PxRigidActor* rigid_actor = (PxRigidActor*)actor;
+			PxMat44 m = rigid_actor->getGlobalPose();
+			mat4* transform = (mat4*)actor->userData;
+			*transform = *(mat4*)&m;
+
+			for (int i = 0; i < m_scene.mesh_count; ++i)
+			{
+				m_renderer->PushMesh(&m_scene.meshes[i], *transform);
+			}
+		}
+	}
 }
 
 void AddWidget(PxShape* shape, PxRigidActor* actor, vec4 geo_color)
