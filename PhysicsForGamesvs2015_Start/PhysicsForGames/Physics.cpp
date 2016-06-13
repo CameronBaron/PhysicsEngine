@@ -11,6 +11,50 @@
 #define Assert(val) if (val){}else{ *((char*)0) = 0;}
 #define ArrayCount(val) (sizeof(val)/sizeof(val[0]))
 
+void MyCollisionCallBack::onContact(const PxContactPairHeader& pairHeader, const PxContactPair* pairs, PxU32 nbPairs)
+{
+	for (PxU32 i = 0; i < nbPairs; ++i)
+	{
+		const PxContactPair& cp = pairs[i];
+		// only interested in touches found and lost
+		if (cp.events & PxPairFlag::eNOTIFY_TOUCH_FOUND)
+		{
+			printf("Collision detected between: ");
+			printf("%s & %s /n", pairHeader.actors[0]->getName(), pairHeader.actors[1]->getName());
+		}
+	}
+}
+
+void MyCollisionCallBack::onTrigger(PxTriggerPair* pairs, PxU32 nbPairs)
+{
+	for (PxU32 i = 0; i < nbPairs; ++i)
+	{
+		PxTriggerPair* pair = pairs + 1;
+		PxActor* triggerActor = pair->triggerActor;
+		PxActor* otherActor = pair->otherActor;
+		printf("%s Entered trigger %s/n", otherActor->getName(), triggerActor->getName());
+	}
+}
+
+PxFilterFlags myFilterShader(PxFilterObjectAttributes attrib0, PxFilterData filterData0, PxFilterObjectAttributes attrib1, PxFilterData filterData1, PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize)
+{
+	// let triggers through
+	if (PxFilterObjectIsTrigger(attrib0) || PxFilterObjectIsTrigger(attrib1))
+	{
+		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
+		return PxFilterFlag::eDEFAULT;
+	}
+	// generate contacts for all that were not filtered above
+	pairFlags = PxPairFlag::eCONTACT_DEFAULT;
+	// trigger the contact for pairs (A,B) where
+	// the filtermask of A contains the ID of B and vice versa.
+	if ((filterData0.word0 & filterData1.word1) & (filterData1.word0 & filterData0.word1))
+	{
+		pairFlags |= PxPairFlag::eNOTIFY_TOUCH_FOUND | PxPairFlag::eNOTIFY_TOUCH_LOST;
+	}
+	return PxFilterFlag::eDEFAULT;
+}
+
 bool Physics::startup()
 {
     if (Application::startup() == false)
@@ -146,11 +190,14 @@ PxScene* Physics::SetUpPhysX()
 	// Set gravity
 	sceneDesc.gravity = PxVec3(0, -9.81f, 0);
 	// Callback function allows us to catch triggered events(enter trigger zones or collisions)
-	sceneDesc.filterShader = &physx::PxDefaultSimulationFilterShader;
+	sceneDesc.filterShader = myFilterShader;
 	// Tells PhysX we are using the CPU for PhysX calcs. (Can use GPU or multiple CPU cores)
 	sceneDesc.cpuDispatcher = PxDefaultCpuDispatcherCreate(8);
 	// Create our PhysX scene
 	m_PhysicsScene = m_Physics->createScene(sceneDesc);
+
+	PxSimulationEventCallback* myCollisionCallBack = new MyCollisionCallBack();
+	m_PhysicsScene->setSimulationEventCallback(myCollisionCallBack);
 
 	//RagDoll* ragdoll = new RagDoll();
 	//PxArticulation* ragDollArticulation;

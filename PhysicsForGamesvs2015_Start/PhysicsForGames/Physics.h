@@ -32,6 +32,15 @@ public:
 	}
 };
 
+class MyCollisionCallBack : public PxSimulationEventCallback
+{
+	virtual void onContact(const PxContactPairHeader& pairHeader, const PxContactPair* pairs, PxU32 nbPairs);
+	virtual void onTrigger(PxTriggerPair* pairs, PxU32 nbPairs);
+	virtual void onConstraintBreak(PxConstraintInfo*, PxU32) {};
+	virtual void onWake(PxActor**, PxU32) {};
+	virtual void onSleep(PxActor**, PxU32) {};
+
+};
 
 class Physics : public Application
 {
@@ -67,7 +76,8 @@ private:
 	PxScene* m_PhysicsScene;
 	PxDefaultErrorCallback mDefaultErrorCallback;
 	PxDefaultAllocator mDefaultAllocatorCallback;
-	PxSimulationFilterShader mDefaultFilterShader = PxDefaultSimulationFilterShader;
+	//PxSimulationFilterShader mDefaultFilterShader = PxDefaultSimulationFilterShader;
+	//PxSimulationFilterShader myFilterShader;
 	PxMaterial* m_PhysicsMaterial;
 	PxMaterial* m_BoxMaterial;
 	PxCooking* m_PhysicsCooker;
