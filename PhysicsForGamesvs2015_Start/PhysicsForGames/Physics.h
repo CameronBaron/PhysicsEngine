@@ -7,6 +7,8 @@
 #include "DIYPhysicsEngine/DIYPhysicScene.h"
 #include "DIYPhysicsEngine\PhysicsObjects\Plane.h"
 #include "DIYPhysicsEngine\PhysicsObjects\SpringJoint.h"
+#include "RagDoll.h"
+#include "FBXFile.h"
 
 #include <PxPhysicsAPI.h>
 #include <PxScene.h>
@@ -52,38 +54,41 @@ public:
     virtual bool update();
     virtual void draw();
 
-	PxScene* SetUpPhysX();
-	void SetupVisualDebugger();
-	void UpdatePhysX(float deltaTime);
-
+	// DIY Physics
 	void DIYPhysicsSetup();
+	void DIYPhysicsUpdate(float dt);
+	void DIYPhysicsDraw();
+	SphereClass* MakeDIYSphere(vec3 a_startPos, float a_mass, float a_radius, vec3 a_initialVel, vec4 a_colour, PhysicsType a_physicsType = PhysicsType::DYNAMIC);
+	BoxClass* MakeDIYBox(vec3 a_startPos, float a_mass, vec3 a_size, vec3 a_initialVel, vec4 a_colour, PhysicsType a_physicsType = PhysicsType::DYNAMIC);
+	Plane* MakeDIYPlane(vec3 a_normal, float a_offset);
+	void MakeDIYString(vec3 a_startPos, unsigned int a_linkCount, float a_linkMass = 0.05f, float a_springCoef = 10.0f, float a_springDamp = 0.25f, bool a_bothEndsStatic = false);
+	void MakeDIYCloth(vec3 a_startPos, unsigned int a_width = 15, float a_linkMass = 0.05f, float a_springCoef = 10.0f, float a_springDamp = 0.25f);
 
-	void SetupTutorial1();
-	void SetupCSHTutorial();
-	void UpdateCSHTutorial();
-
-	PxRigidActor* AddPhysXBox(const PxTransform a_pose, const PxVec3 a_size, const float a_density, const bool a_trigger);
-	PxRigidActor* AddPhysXSphere();
-	PxRigidActor* AddPhysXPlane();
-	void AddPhysXRagDoll(const PxTransform a_pose);
-	void AddFluidSimWithContainer(const PxVec3 a_position);
-
-	Scene m_scene;
-	mat4 m_tank_transform;
-
-	void renderGizmos(PxScene* physics_scene);
-
+	DIYPhysicScene* physicsScene;
+	std::vector<SphereClass*> ballList;
     Renderer* m_renderer;
     FlyCamera m_camera;
-    float m_delta_time;
-	float dt;
 
-private:
+
+#pragma region PhysX
 	enum PhysXActorType
 	{
 		STATIC,
 		DYNAMIC
 	};
+
+	void SetupVisualDebugger();
+	PxScene* SetUpPhysX();
+	void UpdatePhysX(float deltaTime);
+	void SetupTutorial1();
+	void SetupCSHTutorial();
+	void UpdateCSHTutorial();
+
+	PxRigidActor* AddPhysXBox(const PxTransform a_pose, const PxVec3 a_size, const float a_density, PhysXActorType a_objType, const bool a_trigger = false);
+	PxRigidActor* AddPhysXSphere(const PxTransform a_pose, const float a_radius, const float a_density, PhysXActorType a_objType, const bool a_trigger = false);
+	PxRigidActor* AddPhysXPlane(const PxTransform a_pose, PhysXActorType a_objType, const bool a_trigger = false);
+	void AddPhysXRagDoll(PxPhysics* a_physics, const PxTransform a_pose, float a_scale, PxMaterial* a_material);
+	void AddFluidSimWithContainer(const PxVec3 a_position);
 
 	struct PhysXRigidActor
 	{
@@ -93,7 +98,13 @@ private:
 			: PhysXRigidActor(a_physics, a_pose, &PxSphereGeometry(a_radius), a_objType, a_material, a_density)
 		{}
 		// Plane
+		PhysXRigidActor(PxPhysics* a_physics, PxTransform a_pose, PhysXActorType a_objType, PxMaterial* a_material)
+			: PhysXRigidActor(a_physics, a_pose, &PxPlaneGeometry(), a_objType, a_material)
+		{}
 		// Box
+		PhysXRigidActor(PxPhysics* a_physics, PxTransform a_pose, const PxVec3 a_size, PhysXActorType a_objType, PxMaterial* a_material, const float a_density = 1)
+			: PhysXRigidActor(a_physics, a_pose, &PxBoxGeometry(a_size.x, a_size.y, a_size.z), a_objType, a_material, a_density)
+		{}
 
 		PxRigidActor* GetActor() { return actor; }
 		void SetActor(PxRigidActor* a_actor) { actor = a_actor; }
@@ -117,7 +128,6 @@ private:
 				printf("WARNING: ACTOR IS NULL\n");
 			}
 		}
-
 		PxRigidActor* actor;
 	};
 
@@ -134,10 +144,22 @@ private:
 	PxControllerManager* m_ControllerManager;
 	PxDefaultAllocator mDefaultAllocatorCallback;
 
-	DIYPhysicScene* physicsScene;
-	
+	std::vector<PxRigidActor*> m_physXActors;
+	std::vector<PxArticulation*> m_physXRagDollActors;
 
-	//SphereClass* ballList[15*15];
+	Scene m_scene;
+	mat4 m_tank_transform;
+
+	void renderGizmos(PxScene* physics_scene);
+
+
+#pragma endregion
+
+
+	
+	
+    float m_delta_time;
+	float dt;
 	bool firing = false;
 };
 

@@ -24,6 +24,6 @@ void CollisionCallBack::onTrigger(PxTriggerPair* a_pairs, PxU32 a_nbPairs)
 	{
 		PxTriggerPair* pair = a_pairs + i;
 		m_triggered = true;
-		m_triggerBody = pair->triggerActor;
+		m_triggerBody = pair->otherActor;
 	}
 }

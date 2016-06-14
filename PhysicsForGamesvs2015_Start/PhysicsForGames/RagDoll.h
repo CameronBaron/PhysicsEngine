@@ -66,10 +66,10 @@ public:
 	const PxVec3 Y_AXIS = PxVec3(0, 1, 0);
 	const PxVec3 Z_AXIS = PxVec3(0, 0, 1);
 
-	float jointStiffness = 20;
-	float jointDamping = 20;
+	float jointStiffness = 20.0f;
+	float jointDamping = 20.0f;
 	float jointSwingLimit = 0.4f;
-	float jointTwistLimit = 0.1;
+	float jointTwistLimit = 0.1f;
 
 	RagDollNode* ragDollData[21] =
 	{
