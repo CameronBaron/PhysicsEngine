@@ -75,6 +75,9 @@
     <ClInclude Include="RagDoll.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CollisionCallBack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -123,6 +126,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RagDoll.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionCallBack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

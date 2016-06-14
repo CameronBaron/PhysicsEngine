@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CollisionCallBack.h" />
     <ClInclude Include="DIYPhysicsEngine\DIYPhysicScene.h" />
     <ClInclude Include="DIYPhysicsEngine\PhysicsObjects\BoxClass.h" />
     <ClInclude Include="DIYPhysicsEngine\PhysicsObjects\Plane.h" />
@@ -174,6 +175,7 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CollisionCallBack.cpp" />
     <ClCompile Include="DIYPhysicsEngine\DIYPhysicScene.cpp" />
     <ClCompile Include="DIYPhysicsEngine\PhysicsObjects\BoxClass.cpp" />
     <ClCompile Include="DIYPhysicsEngine\PhysicsObjects\Plane.cpp" />

@@ -11,31 +11,6 @@
 #define Assert(val) if (val){}else{ *((char*)0) = 0;}
 #define ArrayCount(val) (sizeof(val)/sizeof(val[0]))
 
-void MyCollisionCallBack::onContact(const PxContactPairHeader& pairHeader, const PxContactPair* pairs, PxU32 nbPairs)
-{
-	for (PxU32 i = 0; i < nbPairs; ++i)
-	{
-		const PxContactPair& cp = pairs[i];
-		// only interested in touches found and lost
-		if (cp.events & PxPairFlag::eNOTIFY_TOUCH_FOUND)
-		{
-			printf("Collision detected between: ");
-			printf("%s & %s /n", pairHeader.actors[0]->getName(), pairHeader.actors[1]->getName());
-		}
-	}
-}
-
-void MyCollisionCallBack::onTrigger(PxTriggerPair* pairs, PxU32 nbPairs)
-{
-	for (PxU32 i = 0; i < nbPairs; ++i)
-	{
-		PxTriggerPair* pair = pairs + 1;
-		PxActor* triggerActor = pair->triggerActor;
-		PxActor* otherActor = pair->otherActor;
-		printf("%s Entered trigger %s/n", otherActor->getName(), triggerActor->getName());
-	}
-}
-
 PxFilterFlags myFilterShader(PxFilterObjectAttributes attrib0, PxFilterData filterData0, PxFilterObjectAttributes attrib1, PxFilterData filterData1, PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize)
 {
 	// let triggers through
@@ -53,6 +28,38 @@ PxFilterFlags myFilterShader(PxFilterObjectAttributes attrib0, PxFilterData filt
 		pairFlags |= PxPairFlag::eNOTIFY_TOUCH_FOUND | PxPairFlag::eNOTIFY_TOUCH_LOST;
 	}
 	return PxFilterFlag::eDEFAULT;
+}
+
+void SetupFiltering(PxRigidActor* a_actor, PxU32 a_filterGroup, PxU32 a_filterMask)
+{
+	PxFilterData filterData;
+	filterData.word0 = a_filterGroup;
+	filterData.word1 = a_filterMask;
+
+	const PxU32 numShapes = a_actor->getNbShapes();
+	PxShape** shapes = (PxShape**)_aligned_malloc(sizeof(PxShape*)*numShapes, 16);
+	a_actor->getShapes(shapes, numShapes);
+	for (PxU32 i = 0; i < numShapes; ++i)
+	{
+		PxShape* shape = shapes[i];
+		shape->setSimulationFilterData(filterData);
+	}
+	_aligned_free(shapes);
+}
+
+void SetShapeAsTrigger(PxRigidActor* a_actor)
+{
+	PxRigidStatic* staticActor = a_actor->is<PxRigidStatic>();
+	assert(staticActor);
+
+	const PxU32 numShapes = staticActor->getNbShapes();
+	PxShape** shapes = (PxShape**)_aligned_malloc(sizeof(PxShape*)*numShapes, 16);
+	staticActor->getShapes(shapes, numShapes);
+	for (PxU32 i = 0; i < numShapes; ++i)
+	{
+		shapes[i]->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
+		shapes[i]->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);
+	}
 }
 
 bool Physics::startup()
@@ -116,28 +123,23 @@ bool Physics::update()
     }
 
 #pragma region Fire Spheres
-	fireTimer += dt;
-	rocketTimer += dt;
 	float mass = 20;
 
-	if (fireTimer > 0.5f && glfwGetKey(m_window, GLFW_KEY_SPACE) == GLFW_PRESS)
-	{
-		SphereClass* ballz;
-		float launchSpeed = 15;
-		ballz = new SphereClass( m_camera.getPosition() + m_camera.getForward(), m_camera.getForward() * launchSpeed, 0.5f, 0.9f, vec4(0, 0, 0, 1));
-		ballz->m_linearDrag = 0.99f;
-		ballz->m_elasticity = 0.9f;
-		physicsScene->AddActor(ballz);
-		fireTimer = 0;
-	}
-	boxCounter += dt;
-	if (fireTimer > 0.5f && glfwGetKey(m_window, GLFW_KEY_G) == GLFW_PRESS)
+	//if (glfwGetKey(m_window, GLFW_KEY_SPACE) == GLFW_PRESS)
+	//{
+	//	SphereClass* ballz;
+	//	float launchSpeed = 15;
+	//	ballz = new SphereClass( m_camera.getPosition() + m_camera.getForward(), m_camera.getForward() * launchSpeed, 0.5f, 0.9f, vec4(0, 0, 0, 1));
+	//	ballz->m_linearDrag = 0.99f;
+	//	ballz->m_elasticity = 0.9f;
+	//	physicsScene->AddActor(ballz);
+	//}
+	if (glfwGetKey(m_window, GLFW_KEY_G) == GLFW_PRESS)
 	{
 		float launchSpeed = 15;
 		BoxClass* boxxy = new BoxClass(m_camera.getPosition() + m_camera.getForward(), vec3(2, 2, 2), m_camera.getForward() * launchSpeed, quat(), 0.5f);
 		physicsScene->AddActor(boxxy);
 		boxxy->m_elasticity = 0.2f;
-		fireTimer = 0;
 	}
 
 #pragma endregion	
@@ -196,8 +198,8 @@ PxScene* Physics::SetUpPhysX()
 	// Create our PhysX scene
 	m_PhysicsScene = m_Physics->createScene(sceneDesc);
 
-	PxSimulationEventCallback* myCollisionCallBack = new MyCollisionCallBack();
-	m_PhysicsScene->setSimulationEventCallback(myCollisionCallBack);
+	m_collisionCallback = new CollisionCallBack();
+	m_PhysicsScene->setSimulationEventCallback(m_collisionCallback);
 
 	//RagDoll* ragdoll = new RagDoll();
 	//PxArticulation* ragDollArticulation;
@@ -231,21 +233,6 @@ void Physics::UpdatePhysX(float a_deltaTime)
 	{
 		return;
 	}
-	counter += a_deltaTime;
-	
-	//if (counter >= 2)
-	//{
-	//	float density = 10;
-
-	//	PxBoxGeometry box(2, 2, 2);
-	//	PxTransform transform(PxVec3(0, 50, 0));
-	//	PxRigidDynamic* dynamicActor = PxCreateDynamic(*m_Physics, transform, box, *m_PhysicsMaterial, density);
-	//	//dynamicActor->addForce(PxVec3(0, 50, 0), PxForceMode::eIMPULSE);
-	//	PxRigidBodyExt::updateMassAndInertia(*dynamicActor, density);
-
-	//	m_PhysicsScene->addActor(*dynamicActor);
-	//	counter = 0;
-	//}
 
 	// Setup "Gun"
 	if (glfwGetKey(m_window, GLFW_KEY_B) == GLFW_PRESS && !firing)
@@ -260,6 +247,7 @@ void Physics::UpdatePhysX(float a_deltaTime)
 		float muzzleSpeed = 20;
 
 		PxRigidDynamic* new_actor = PxCreateDynamic(*m_Physics, box_transform, sphere, *m_PhysicsMaterial, density);
+		SetupFiltering(new_actor, FilterGroup::ePLATFORM, FilterGroup::ePLAYER);
 		vec3 direction = (-m_camera.world[2].xyz());
 		PxVec3 velocity = PxVec3(direction.x, direction.y, direction.z) * muzzleSpeed;
 		new_actor->setLinearVelocity(velocity, true);
@@ -270,6 +258,7 @@ void Physics::UpdatePhysX(float a_deltaTime)
 	if (glfwGetKey(m_window, GLFW_KEY_B) != GLFW_PRESS)
 		firing = false;
 
+	// Ragdoll
 	//if (glfwGetKey(m_window, GLFW_KEY_R) == GLFW_PRESS)
 	//{
 	//	vec3 cam_pos = m_camera.world[3].xyz();
@@ -281,6 +270,30 @@ void Physics::UpdatePhysX(float a_deltaTime)
 	//	ragDollArticulation = ragdoll->MakeRagDoll(m_Physics, ragdoll->ragDollData, transform, 0.1f, m_PhysicsMaterial);
 	//	m_PhysicsScene->addArticulation(*ragDollArticulation);
 	//}
+
+	if (m_collisionCallback)
+	{
+		if (m_collisionCallback->GetTriggered())
+		{
+			PxRigidActor* triggerActor = m_collisionCallback->GetTriggerBody();
+
+			PxRigidBody* body = triggerActor->isRigidBody();
+
+			if (body)
+			{
+				body->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, false);
+			}
+
+			const PxU32 numShapes = triggerActor->getNbShapes();
+			PxShape** shapes = (PxShape**)_aligned_malloc(sizeof(PxShape*)*numShapes, 16);
+			triggerActor->getShapes(shapes, numShapes);
+			for (PxU32 i = 0; i < numShapes; i++)
+			{
+				//shapes[i]->setFlag(PxShapeFlag::eTRIGGER_SHAPE, false);
+				//shapes[i]->setFlag(PxShapeFlag::eSIMULATION_SHAPE, true);
+			}
+		}
+	}
 
 	m_PhysicsScene->simulate(a_deltaTime);
 	while (m_PhysicsScene->fetchResults() == false)
@@ -295,7 +308,7 @@ void Physics::DIYPhysicsSetup()
 	physicsScene->gravity = vec3(0, -10, 0);
 	physicsScene->timeStep = dt;
 
-	plane = new Plane(vec3(0, 1, 0), -0.1f);
+	Plane* plane = new Plane(vec3(0, 1, 0), -0.1f);
 	physicsScene->AddActor(plane);
 
 	float ballRadius = 0.09f;
@@ -304,6 +317,7 @@ void Physics::DIYPhysicsSetup()
 	float damping = 0.25f;
 	float springCo = 10.0f;
 	
+	SphereClass* newBall;
 	for (int i = 0; i < 10; i++)
 	{
 		SphereClass* ball2 = new SphereClass(vec3(i,i * 0.2f + 10, 0), vec3(0), mass, ballRadius, vec4(0, 1, 0, 1));
@@ -416,6 +430,13 @@ void Physics::SetupTutorial1()
 	// add it to the physX scene
 	m_PhysicsScene->addActor(*plane);
 
+	PxBoxGeometry box(2, 2, 2);
+	PxTransform transform(PxVec3(0, 5, 0));
+	PxRigidStatic* staticActor = PxCreateStatic(*m_Physics, transform, box, *m_PhysicsMaterial);
+	SetShapeAsTrigger(staticActor);
+	SetupFiltering(staticActor, FilterGroup::eGROUND, FilterGroup::ePLAYER);
+	m_PhysicsScene->addActor(*staticActor);
+
 #pragma region Fluid dynamics
 	//PxBoxGeometry side1(4.5f, 1, 0.5f);
 	//PxBoxGeometry side2(0.5f, 1, 4.5f);
@@ -463,15 +484,7 @@ void Physics::SetupTutorial1()
 	//}
 #pragma endregion
 	
-	//add a box
-	//float density = 10;
-	//PxBoxGeometry box(2, 2, 2);
-	//PxTransform transform(PxVec3(0, 5, 0));
-	//PxRigidDynamic* dynamicActor = PxCreateDynamic(*m_Physics, transform, box, *m_PhysicsMaterial, density);
 	
-	//add it to the physX scene
-	//m_PhysicsScene->addActor(*dynamicActor);
-
 }
 
 void Physics::SetupCSHTutorial()
@@ -549,7 +562,7 @@ void AddWidget(PxShape* shape, PxRigidActor* actor, vec4 geo_color)
         PxBoxGeometry geo;
         shape->getBoxGeometry(geo);
         vec3 extents(geo.halfExtents.x, geo.halfExtents.y, geo.halfExtents.z);
-        Gizmos::addAABBFilled(actor_position, extents, geo_color, &rot);
+        Gizmos::addAABB(actor_position, extents, geo_color, &rot);
     } break;
     case (PxGeometryType::eCAPSULE) :
     {
@@ -561,7 +574,7 @@ void AddWidget(PxShape* shape, PxRigidActor* actor, vec4 geo_color)
     {
         PxSphereGeometry geo;
         shape->getSphereGeometry(geo);
-        Gizmos::addSphereFilled(actor_position, geo.radius, 16, 16, geo_color, &rot);
+        Gizmos::addSphere(actor_position, geo.radius, 16, 16, geo_color, &rot);
     } break;
     case (PxGeometryType::ePLANE) :
     {
