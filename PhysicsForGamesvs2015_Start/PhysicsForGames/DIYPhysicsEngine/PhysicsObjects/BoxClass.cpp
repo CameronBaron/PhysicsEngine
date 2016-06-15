@@ -14,5 +14,5 @@ BoxClass::~BoxClass()
 
 void BoxClass::MakeGizmo()
 {
-	Gizmos::addAABBFilled(m_position, max, vec4(0, 0, 0, 1));
+	Gizmos::addAABBFilled(m_position, max, vec4(0, 1, 0, 1));
 }

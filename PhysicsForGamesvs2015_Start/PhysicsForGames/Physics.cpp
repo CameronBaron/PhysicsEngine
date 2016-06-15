@@ -10,6 +10,7 @@
 
 #define Assert(val) if (val){}else{ *((char*)0) = 0;}
 #define ArrayCount(val) (sizeof(val)/sizeof(val[0]))
+#define GREEN glm::vec4(0,1,0,1)
 
 bool Physics::startup()
 {
@@ -72,18 +73,12 @@ bool Physics::update()
             i == 10 ? white : black);
     }
 
-
-
     m_camera.update(1.0f / 60.0f);
 
 	UpdatePhysX(dt);
-	DIYPhysicsUpdate(dt);
+	renderGizmos(m_PhysicsScene);
 
-	//if (m_particleEmitter)
-	//{
-	//	m_particleEmitter->update(dt);
-	//	m_particleEmitter->renderParticles();
-	//}
+	DIYPhysicsUpdate(dt);
 
 	dt = (float)glfwGetTime();
 
@@ -96,7 +91,6 @@ void Physics::draw()
 	glEnable(GL_CULL_FACE);
     Gizmos::draw(m_camera.proj, m_camera.view);
 
-	renderGizmos(m_PhysicsScene);
 
 	physicsScene->AddGizmos();
     m_renderer->RenderAndClear(m_camera.view_proj);
@@ -116,7 +110,28 @@ void Physics::DIYPhysicsSetup()
 
 	MakeDIYPlane(vec3(0, 1, 0), -0.1f);
 
-	MakeDIYString(vec3(-5,10,-5), 10, 0.08f, 10.0f, 0.9f, false);
+	MakeDIYString(vec3(-10,20,-10), 10, 0.08f, 10.0f, 0.9f, false);
+
+#pragma region DIY Scene
+
+	// Left wall
+	MakeDIYBox(vec3(-20, 5, 0), 100.0f, vec3(0.2f, 10, 40), vec3(0), GREEN, PhysicsType::STATIC);
+	// Back wall
+	MakeDIYBox(vec3(-10, 5, -20), 100.0f, vec3(20, 10, 0.2f), vec3(0), GREEN, PhysicsType::STATIC);
+
+	// box stack
+	for (int i = 0; i < 5; ++i)
+	{
+		MakeDIYBox(vec3(-5, 2 + 1 * i, 0), 100.0f, vec3(1, 1, 1), vec3(0), GREEN);
+		if (i == 4)
+		{
+			MakeDIYSphere(vec3(-5, 2 + 2 * i, 0), 1.0f, 1.0f, vec3(0), GREEN);
+		}
+	}
+
+
+#pragma endregion
+
 }
 
 void Physics::DIYPhysicsUpdate(float dt)
@@ -124,20 +139,18 @@ void Physics::DIYPhysicsUpdate(float dt)
 #pragma region Fire Spheres
 	float mass = 20;
 
-	//if (glfwGetKey(m_window, GLFW_KEY_SPACE) == GLFW_PRESS)
-	//{
-	//	float launchSpeed = 15;
-	//	SphereClass* ball = MakeDIYSphere(m_camera.getPosition() + m_camera.getForward(), 0.5f, 0.9f, m_camera.getForward() * launchSpeed, vec4(0, 0, 0, 1));
-	//	ball->m_linearDrag = 0.99f;
-	//	ball->m_elasticity = 0.9f;
-	//}
-	//if (glfwGetKey(m_window, GLFW_KEY_G) == GLFW_PRESS)
-	//{
-	//	float launchSpeed = 15;
-	//	BoxClass* boxxy = new BoxClass(m_camera.getPosition() + m_camera.getForward(), vec3(2, 2, 2), m_camera.getForward() * launchSpeed, quat(), 0.5f);
-	//	physicsScene->AddActor(boxxy);
-	//	boxxy->m_elasticity = 0.2f;
-	//}
+	if (glfwGetKey(m_window, GLFW_KEY_SPACE) == GLFW_PRESS && !firingDIY)
+	{
+		float launchSpeed = 15;
+		SphereClass* ball = MakeDIYSphere(m_camera.getPosition() + m_camera.getForward(), 5.0f, 0.4f, m_camera.getForward() * launchSpeed, vec4(0, 0, 0, 1));
+		ball->m_linearDrag = 0.99f;
+		ball->m_elasticity = 0.9f;
+		firingDIY = true;
+	}
+	if (glfwGetKey(m_window, GLFW_KEY_SPACE) == GLFW_RELEASE)
+	{
+		firingDIY = false;
+	}
 
 	physicsScene->Update(dt);
 	physicsScene->AddGizmos();
@@ -186,13 +199,14 @@ void Physics::MakeDIYString(vec3 a_startPos, unsigned int a_linkCount, float a_l
 			SpringJoint* spring = new SpringJoint(ball2, ball1, a_springCoef, a_springDamp);
 			physicsScene->AddActor(spring);
 		}
-		if (i == 0 && a_bothEndsStatic)
+		if (i == 0)
 		{
 			ball1->m_physicsType = PhysicsType::STATIC;
 		}
 		ball2 = ball1;
 	}
-	ball2->m_physicsType = PhysicsType::STATIC;
+	if (a_bothEndsStatic)
+		ball2->m_physicsType = PhysicsType::STATIC;
 }
 
 void Physics::MakeDIYCloth(vec3 a_startPos, unsigned int a_width, float a_linkMass, float a_springCoef, float a_springDamp)
@@ -383,7 +397,7 @@ PxScene* Physics::SetUpPhysX()
 	m_collisionCallback = new CollisionCallBack();
 	m_PhysicsScene->setSimulationEventCallback(m_collisionCallback);
 
-	
+	SetupScene();
 
 	return m_PhysicsScene;
 }
@@ -395,8 +409,10 @@ void Physics::UpdatePhysX(float a_deltaTime)
 		return;
 	}
 
+	CharacterControls(a_deltaTime);
+
 	// Setup "Gun"
-	if (glfwGetKey(m_window, GLFW_KEY_B) == GLFW_PRESS && !firing)
+	if (glfwGetKey(m_window, GLFW_KEY_B) == GLFW_PRESS && !firingPhysX)
 	{
 		vec3 cam_pos = m_camera.world[3].xyz();
 		vec3 box_vel = -m_camera.world[2].xyz() * 20.0f;
@@ -412,12 +428,12 @@ void Physics::UpdatePhysX(float a_deltaTime)
 		vec3 direction = (-m_camera.world[2].xyz());
 		PxVec3 velocity = PxVec3(direction.x, direction.y, direction.z) * muzzleSpeed;
 		new_actor->setLinearVelocity(velocity, true);
+		new_actor->setName("bullet");
 		m_PhysicsScene->addActor(*new_actor);
-		firing = true;
+		firingPhysX = true;
 	}
-
-	if (glfwGetKey(m_window, GLFW_KEY_B) != GLFW_PRESS)
-		firing = false;
+	else if (glfwGetKey(m_window, GLFW_KEY_B) == GLFW_RELEASE)
+		firingPhysX = false;
 
 	// Ragdoll
 	//if (glfwGetKey(m_window, GLFW_KEY_R) == GLFW_PRESS)
@@ -445,15 +461,26 @@ void Physics::UpdatePhysX(float a_deltaTime)
 				body->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, false);
 			}
 
-			const PxU32 numShapes = triggerActor->getNbShapes();
+			/*const PxU32 numShapes = triggerActor->getNbShapes();
 			PxShape** shapes = (PxShape**)_aligned_malloc(sizeof(PxShape*)*numShapes, 16);
 			triggerActor->getShapes(shapes, numShapes);
 			for (PxU32 i = 0; i < numShapes; i++)
 			{
 				shapes[i]->setFlag(PxShapeFlag::eTRIGGER_SHAPE, false);
 				shapes[i]->setFlag(PxShapeFlag::eSIMULATION_SHAPE, true);
+			}*/
+
+			if (m_particleEmitter)
+			{
+				m_particleEmitter->update(dt);
 			}
+			
 		}
+	}
+
+	if (m_particleEmitter)
+	{
+		m_particleEmitter->renderParticles();
 	}
 
 	m_PhysicsScene->simulate(a_deltaTime);
@@ -463,7 +490,7 @@ void Physics::UpdatePhysX(float a_deltaTime)
 	}
 }
 
-void Physics::SetupTutorial1()
+void Physics::SetupScene()
 {
 	//add a plane
 	PxTransform pose = PxTransform(PxVec3(0.0f, 0, 0.0f), PxQuat(PxHalfPi * 1.0f, PxVec3(0.0f, 0.0f, 1.0f)));
@@ -473,13 +500,51 @@ void Physics::SetupTutorial1()
 	// add it to the physX scene
 	m_PhysicsScene->addActor(*plane);
 
-	PxBoxGeometry box(2, 2, 2);
-	PxTransform transform(PxVec3(0, 5, 0));
+	// Back wall
+	PxBoxGeometry box(10, 5, 0.2f);
+	PxTransform transform(PxVec3(10, 5, -20));
 	PxRigidStatic* staticActor = PxCreateStatic(*m_Physics, transform, box, *m_PhysicsMaterial);
-	SetShapeAsTrigger(staticActor);
-	SetupFiltering(staticActor, FilterGroup::eGROUND, FilterGroup::ePLAYER);
 	m_PhysicsScene->addActor(*staticActor);
-		
+
+	// Right wall
+	PxBoxGeometry box2(0.2f, 5, 20);
+	PxTransform transform2(PxVec3(20, 5, 0));
+	PxRigidStatic* staticActor2 = PxCreateStatic(*m_Physics, transform2, box2, *m_PhysicsMaterial);
+	m_PhysicsScene->addActor(*staticActor2);
+
+	// Ragdoll
+	AddPhysXRagDoll(m_Physics, PxTransform(PxVec3(10, 10, -10)), 0.1f, m_PhysicsMaterial);
+
+	// trigger volume
+	PxRigidActor* triggerVol;
+	triggerVol = AddPhysXBox(PxTransform(PxVec3(10, 4, 20)), PxVec3(4, 4, 4), 1, PhysXActorType::STATIC, true);
+	triggerVol->setName("FluidTrigger");
+
+	// fluid particles
+	AddFluidSimWithContainer(PxVec3(10, 1, 10));
+
+	// player controller
+	m_myHitReport = new MyControllerHitReport();
+	m_characterManager = PxCreateControllerManager(*m_PhysicsScene);
+	// Describe our controller
+	PxCapsuleControllerDesc desc;
+	desc.height = 1.6f;
+	desc.radius = 0.4f;
+	desc.position.set(0, 0, 0);
+	desc.material = m_PhysicsMaterial;
+	desc.reportCallback = m_myHitReport;
+	desc.density = 10;
+	// Create the layer controller
+	m_playerController = m_characterManager->createController(desc);
+	startingPosition = PxExtendedVec3(0, 0, 0);
+	m_playerController->setPosition(startingPosition);
+	// setup some controls to control our player with
+	m_characterYVelocity = 0;
+	m_characterRotation = 0;
+	m_playerGravity = -0.5f;
+	m_myHitReport->clearPlayerContactNormal();
+
+	AddPhysXCapsule(PxTransform(PxVec3(0, 20, 0)), 1, 2, 1, PhysXActorType::DYNAMIC);
 }
 
 void Physics::SetupCSHTutorial()
@@ -572,32 +637,47 @@ PxRigidActor* Physics::AddPhysXPlane(const PxTransform a_pose, PhysXActorType a_
 	return planeActor->GetActor();
 }
 
+PxRigidActor* Physics::AddPhysXCapsule(const PxTransform a_pose, float a_radius, float a_halfHeight, const float a_density, PhysXActorType a_objType, const bool a_trigger)
+{
+	PhysXRigidActor* capsuleActor = new PhysXRigidActor(m_Physics, a_pose, a_radius, a_halfHeight, a_objType, m_PhysicsMaterial, a_density);
+
+	if (a_trigger && capsuleActor != NULL)
+	{
+		SetShapeAsTrigger(capsuleActor->GetActor());
+		SetupFiltering(capsuleActor->GetActor(), FilterGroup::ePLAYER, FilterGroup::ePLATFORM);
+		capsuleActor->GetActor()->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
+	}
+	m_PhysicsScene->addActor(*capsuleActor->GetActor());
+	return capsuleActor->GetActor();
+}
+
 void Physics::AddPhysXRagDoll(PxPhysics* a_physics, const PxTransform a_pose, float a_scale, PxMaterial* a_material)
 {
 	RagDoll* ragdoll = new RagDoll();
 	PxArticulation* ragDollArticulation;
 	ragDollArticulation = ragdoll->MakeRagDoll(a_physics, ragdoll->ragDollData, a_pose, a_scale, a_material);
 	m_PhysicsScene->addArticulation(*ragDollArticulation);
+	ragDollArticulation->putToSleep();
 }
 
 void Physics::AddFluidSimWithContainer(const PxVec3 a_position)
 {
-	PxBoxGeometry side1(4.5f, 1, 0.5f);
-	PxBoxGeometry side2(0.5f, 1, 4.5f);
+	PxBoxGeometry side1(4.0f, 5, 0.1f);
+	PxBoxGeometry side2(0.1f, 5, 4.0f);
 	
-	PxTransform pose = PxTransform(PxVec3(20.0f, 0.5f, 4.0f));
+	PxTransform pose = PxTransform(a_position + PxVec3(0, 2.5f, 4.0f));
 	PxRigidStatic* box = PxCreateStatic(*m_Physics, pose, side1, *m_PhysicsMaterial);
 	m_PhysicsScene->addActor(*box);
 	
-	pose = PxTransform(PxVec3(20.0f, 0.5f, -4.0f));
+	pose = PxTransform(a_position + PxVec3(0, 2.5f, -4.0f));
 	box = PxCreateStatic(*m_Physics, pose, side1, *m_PhysicsMaterial);
 	m_PhysicsScene->addActor(*box);
 	
-	pose = PxTransform(PxVec3(24.0f, 0.5f, 0));
+	pose = PxTransform(a_position + PxVec3(4.0f, 2.5f, 0));
 	box = PxCreateStatic(*m_Physics, pose, side2, *m_PhysicsMaterial);
 	m_PhysicsScene->addActor(*box);
 	
-	pose = PxTransform(PxVec3(16.0f, 0.5f, 0));
+	pose = PxTransform(a_position + PxVec3(-4.0f, 2.5f, 0));
 	box = PxCreateStatic(*m_Physics, pose, side2, *m_PhysicsMaterial);
 	m_PhysicsScene->addActor(*box);
 	
@@ -605,26 +685,69 @@ void Physics::AddFluidSimWithContainer(const PxVec3 a_position)
 	
 	// create particle system in PhysX SDX
 	// set immutable properties
-	PxU32 maxParticles = 4000;
+	PxU32 maxParticles = 40000;
 	bool perParticleRestOffSet = false;
 	pf = m_Physics->createParticleFluid(maxParticles, perParticleRestOffSet);
 	
 	pf->setViscosity(0.9f);
-	pf->setRestParticleDistance(0.5f);
-	pf->setDynamicFriction(0.1f);
+	pf->setRestParticleDistance(0.4f);
+	pf->setDynamicFriction(0.01f);
 	pf->setStaticFriction(0.1f);
-	pf->setDamping(0);
-	pf->setParticleMass(0.6f);
+	pf->setDamping(0.1f);
+	pf->setParticleMass(10.0f);
 	pf->setRestitution(0);
 	pf->setParticleBaseFlag(PxParticleBaseFlag::eCOLLISION_TWOWAY, true);
-	pf->setStiffness(100);
+	pf->setStiffness(50);
 	
 	if (pf)
 	{
 		m_PhysicsScene->addActor(*pf);
-		m_particleEmitter = new ParticleFluidEmitter(maxParticles, PxVec3(20, 10, 0), pf, 0.01f);
-		m_particleEmitter->setStartVelocityRange(-0.001f, -250.0f, -200.0f, 0.001f, -250.0f, 0.001f);
+		m_particleEmitter = new ParticleFluidEmitter(maxParticles, a_position + PxVec3(0, 10, 0), pf, 0.05f);
+		m_particleEmitter->setStartVelocityRange(-10.0f, 100.0f, -10.0f, 10.0f, 200.0f, 10.0f);
 	}
+}
+
+void Physics::CharacterControls(float dt)
+{
+	bool onGround;
+	float movementSpeed = 10.0f;
+	float rotationSpeed = 10.0f;
+
+	if (m_myHitReport->getPlayerContactNormal().y > 0.1f)
+	{
+		m_characterYVelocity = -0.1f;
+		onGround = true;
+	}
+	else
+	{
+		m_characterYVelocity += m_playerGravity * dt;
+		onGround = false;
+	}
+	m_myHitReport->clearPlayerContactNormal();
+	const PxVec3 up(0, 1, 0);
+
+	PxVec3 velocity(0, m_characterYVelocity, 0);
+	if (glfwGetKey(m_window, GLFW_KEY_UP) == GLFW_PRESS)
+	{
+		velocity.x -= movementSpeed * dt;
+	}
+	if (glfwGetKey(m_window, GLFW_KEY_DOWN) == GLFW_PRESS)
+	{
+		velocity.x += movementSpeed * dt;
+	}
+	if (glfwGetKey(m_window, GLFW_KEY_LEFT) == GLFW_PRESS)
+	{
+		m_characterRotation -= rotationSpeed * dt;
+	}
+	if (glfwGetKey(m_window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+	{
+		m_characterRotation += rotationSpeed * dt;
+	}
+
+	float minDistance = 0.001f;
+	PxControllerFilters filter;
+	PxQuat rotation(m_characterRotation, up);
+	m_playerController->move(rotation.rotate(velocity), minDistance, dt, filter);
 }
 
 void AddWidget(PxShape* shape, PxRigidActor* actor, vec4 geo_color)
@@ -654,7 +777,7 @@ void AddWidget(PxShape* shape, PxRigidActor* actor, vec4 geo_color)
     {
         PxCapsuleGeometry geo;
         shape->getCapsuleGeometry(geo);
-        Gizmos::addCapsule(actor_position, geo.halfHeight * 2, geo.radius, 16, 16, geo_color, &rot);
+		Gizmos::addCapsule(actor_position, geo.halfHeight * 2, geo.radius, 16, 16, geo_color, &rot);
     } break;
     case (PxGeometryType::eSPHERE) :
     {
@@ -730,4 +853,3 @@ void Physics::renderGizmos(PxScene* physics_scene)
         delete[] links;
     }
 }
-

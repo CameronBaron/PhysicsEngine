@@ -1,0 +1,851 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Application" Collapsed="true">
+    <Position X="1.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAJAAAAABAAAAABAAIAAAAgAAACAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Application.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Camera" Collapsed="true">
+    <Position X="6.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACMAAAAAAAAAAkAAAAAIASAAAAAIAABQAAAAAEBAA=</HashCode>
+      <FileName>Camera.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FlyCamera" Collapsed="true">
+    <Position X="6.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAQAAAAgAAAAAAAAAAAAAAkAAAAAAAAAEAAI=</HashCode>
+      <FileName>Camera.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CollisionCallBack" Collapsed="true">
+    <Position X="23" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEABgAAAEAAAIACAAAAAAACAACABAAAAAAAAAACA=</HashCode>
+      <FileName>CollisionCallBack.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DIYPhysicScene" Collapsed="true">
+    <Position X="24.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>xgSABAgBABBAASQAAMBEYQgiABAIAAAAGAEAVACAAJA=</HashCode>
+      <FileName>DIYPhysicsEngine\DIYPhysicScene.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BoxClass" Collapsed="true">
+    <Position X="5.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAEAgAAAAQCAAAAAAAAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DIYPhysicsEngine\PhysicsObjects\BoxClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Plane" Collapsed="true">
+    <Position X="0.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAgAAAAAAIAAAAAAAQAAAAAAAAAAAAIAAEAAAAA=</HashCode>
+      <FileName>DIYPhysicsEngine\PhysicsObjects\Plane.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SpringJoint" Collapsed="true">
+    <Position X="3" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAkAAAAIAIAIAAAAAAAAAAAAAAEAAAAAAAQAAAA=</HashCode>
+      <FileName>DIYPhysicsEngine\PhysicsObjects\SpringJoint.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gizmos" Collapsed="true">
+    <Position X="26.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEACgJMECAwBBEAAAZKEgkAAACCCEAggCghAAERoAlY=</HashCode>
+      <FileName>Gizmos.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ParticleEmitter" Collapsed="true">
+    <Position X="31.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAIgBDCAAAEAAACAAAAAAAAQoAAAgAAAJAAAEQBA=</HashCode>
+      <FileName>ParticleEmitter.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ParticleFluidEmitter" Collapsed="true">
+    <Position X="33.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AhEAAIgADCAAAEAAAAAAEAAAIAQoAgEgAACJCAAEQBA=</HashCode>
+      <FileName>ParticleFluidEmitter.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="myAllocator" Collapsed="true">
+    <Position X="28.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAEAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Physics.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Physics" Collapsed="true">
+    <Position X="1.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gBCACgxACAMQEIITAEIQYEAjZACCoAgAIo0okaEGIAA=</HashCode>
+      <FileName>Physics.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PhysicsObject" Collapsed="true">
+    <Position X="4" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAgACAAAAIAAAAAAAAAAAAAAAAAAAggAAAAEAAA=</HashCode>
+      <FileName>DIYPhysicsEngine\PhysicsObjects\PhysicsObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RigidBody" Collapsed="true">
+    <Position X="6.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAEAKAAKIABgACEAAAEaAIAAABIQAIAAAkACIA=</HashCode>
+      <FileName>DIYPhysicsEngine\PhysicsObjects\RigidBody.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SphereClass" Collapsed="true">
+    <Position X="7.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>DIYPhysicsEngine\PhysicsObjects\SphereClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RagDoll" Collapsed="true">
+    <Position X="23" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABBAAAAAAwAAAAAgAIAAEQAAAAIAAAAAAEEAAAAA=</HashCode>
+      <FileName>RagDoll.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Renderer" Collapsed="true">
+    <Position X="24.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAgAAAAAAAAAAAAAACIAAAAAAAAQAAAAACAAAAAAAA=</HashCode>
+      <FileName>Render.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MyControllerHitReport" Collapsed="true">
+    <Position X="30" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAIAAAAAAAAAAACAAAAAAAAAQgAIAAAAAABAAAAAAAA=</HashCode>
+      <FileName>MyControllerHitReport.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tinyobj::MaterialReader" Collapsed="true">
+    <Position X="5.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAEAAAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>tiny_obj_loader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tinyobj::MaterialFileReader" Collapsed="true">
+    <Position X="5.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAEAAAAAAAAAIAAACAAAAAAAAAAAA=</HashCode>
+      <FileName>tiny_obj_loader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="ogl_StrToExtMap_s" Collapsed="true">
+    <Position X="5.5" Y="22.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAgAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.c</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Texture" Collapsed="true">
+    <Position X="28.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>Renderer.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="TextureBank" Collapsed="true">
+    <Position X="30" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Renderer.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Particle" Collapsed="true">
+    <Position X="31.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAIAAAAAA=</HashCode>
+      <FileName>ParticleEmitter.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FluidParticle" Collapsed="true">
+    <Position X="24.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAIAAAAAA=</HashCode>
+      <FileName>ParticleFluidEmitter.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FilterGroup" Collapsed="true">
+    <Position X="23" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Physics.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="RagDollNode" Collapsed="true">
+    <Position X="33.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAACAAAEAAAACAAAAAAAAEkAACQAAAAAAAAACA=</HashCode>
+      <FileName>RagDoll.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Material" Collapsed="true">
+    <Position X="26.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAggAAAAAAAAAAAAEACAAAAA=</HashCode>
+      <FileName>Render.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SimpleVertex" Collapsed="true">
+    <Position X="24.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAIgAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Render.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SubMesh" Collapsed="true">
+    <Position X="26.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAEAAAgAAAAAAABAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Render.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Mesh" Collapsed="true">
+    <Position X="28.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACFAAAAAAAAAABAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>Render.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Scene" Collapsed="true">
+    <Position X="23" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACACAAAAAAAAA=</HashCode>
+      <FileName>Render.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0020_2" Collapsed="true">
+    <Position X="9.5" Y="20.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAACAEAAAAAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0020_3" Collapsed="true">
+    <Position X="19.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAEAIAYAgAAgAAAAAAAhAAAAABACA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0020_5" Collapsed="true">
+    <Position X="18.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIIAAAAAAIAAACCAAAAAAAEAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0020_6" Collapsed="true">
+    <Position X="18.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgACBABEAAIAAEDEAgMAAIBgAAgAAABAIBAQAAgAgg=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0020_8" Collapsed="true">
+    <Position X="17.5" Y="18.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEEAAAAAAAAAAQAAAAAAAACAIABAIAAAgAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0020_9" Collapsed="true">
+    <Position X="17.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIIAAAAgIAAAACCAAAAAAAAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0020_10" Collapsed="true">
+    <Position X="5.5" Y="17.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAQAAAIEAJAAgAgAAAgAAAAAAIAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0020_11" Collapsed="true">
+    <Position X="15.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAEAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0020_12" Collapsed="true">
+    <Position X="1.5" Y="16.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAQAAAAAAAAAAAAAAAIAAAIAAAAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0020_14" Collapsed="true">
+    <Position X="13.5" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAAAIAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0020_15" Collapsed="true">
+    <Position X="9.5" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAEAAAAAAAAAAgAAAAAAAAAgAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="__unnamed_struct_0020_16" Collapsed="true">
+    <Position X="14.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAEICAgAIAACRAQAgAEhAYAAgAAAAQAggAAAAJAQ=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="tinyobj::__unnamed_struct_0021_1" Collapsed="true">
+    <Position X="11.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAEBAAEAIAKAAAAIBAACQAIAAAAEAAiAgAACACBAAAA=</HashCode>
+      <FileName>tiny_obj_loader.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="tinyobj::__unnamed_struct_0021_2" Collapsed="true">
+    <Position X="5.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAgABAAAAAAIAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>tiny_obj_loader.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="tinyobj::__unnamed_struct_0021_3" Collapsed="true">
+    <Position X="11.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>tiny_obj_loader.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="tinyobj::vertex_index" Collapsed="true">
+    <Position X="31.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAAAAAAACAAAgIAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>tiny_obj_loader.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="tinyobj::obj_shape" Collapsed="true">
+    <Position X="30" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAAAAAAAAAABABAAAAAAAAA=</HashCode>
+      <FileName>tiny_obj_loader.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="func" Collapsed="true">
+    <Position X="23" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DIYPhysicsEngine\DIYPhysicScene.cpp</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="PFN_LOADFUNCPOINTERS" Collapsed="true">
+    <Position X="24.75" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.c</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="ogl_StrToExtMap" Collapsed="true">
+    <Position X="5.5" Y="24.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.c</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="int64_t" Collapsed="true">
+    <Position X="1.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="uint64_t" Collapsed="true">
+    <Position X="7.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="int32_t" Collapsed="true">
+    <Position X="23" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLenum" Collapsed="true">
+    <Position X="31.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLboolean" Collapsed="true">
+    <Position X="26.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLbitfield" Collapsed="true">
+    <Position X="24.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLvoid" Collapsed="true">
+    <Position X="33.5" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLbyte" Collapsed="true">
+    <Position X="28.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLshort" Collapsed="true">
+    <Position X="31.75" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLint" Collapsed="true">
+    <Position X="1.5" Y="23.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLubyte" Collapsed="true">
+    <Position X="28.25" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLushort" Collapsed="true">
+    <Position X="31.75" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLuint" Collapsed="true">
+    <Position X="30" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLsizei" Collapsed="true">
+    <Position X="33.5" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLfloat" Collapsed="true">
+    <Position X="33.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLclampf" Collapsed="true">
+    <Position X="23" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLdouble" Collapsed="true">
+    <Position X="30" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLclampd" Collapsed="true">
+    <Position X="33.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLchar" Collapsed="true">
+    <Position X="30" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLcharARB" Collapsed="true">
+    <Position X="31.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLhandleARB" Collapsed="true">
+    <Position X="28.25" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLhalfARB" Collapsed="true">
+    <Position X="24.75" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLhalf" Collapsed="true">
+    <Position X="23" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLfixed" Collapsed="true">
+    <Position X="1.5" Y="21.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLintptr" Collapsed="true">
+    <Position X="13.5" Y="22.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLsizeiptr" Collapsed="true">
+    <Position X="23" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLint64" Collapsed="true">
+    <Position X="3.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLuint64" Collapsed="true">
+    <Position X="10.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLintptrARB" Collapsed="true">
+    <Position X="30" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLsizeiptrARB" Collapsed="true">
+    <Position X="24.75" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLint64EXT" Collapsed="true">
+    <Position X="1.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLuint64EXT" Collapsed="true">
+    <Position X="7.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLsync" Collapsed="true">
+    <Position X="26.5" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLDEBUGPROC" Collapsed="true">
+    <Position X="24.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLDEBUGPROCARB" Collapsed="true">
+    <Position X="28.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLDEBUGPROCAMD" Collapsed="true">
+    <Position X="26.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLhalfNV" Collapsed="true">
+    <Position X="26.5" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLvdpauSurfaceNV" Collapsed="true">
+    <Position X="13.5" Y="20.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="stbi_uc" Collapsed="true">
+    <Position X="23" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="stbi_io_callbacks" Collapsed="true">
+    <Position X="9.5" Y="22.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="stbi__uint16" Collapsed="true">
+    <Position X="31.75" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="stbi__int16" Collapsed="true">
+    <Position X="28.25" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="stbi__uint32" Collapsed="true">
+    <Position X="33.5" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="stbi__int32" Collapsed="true">
+    <Position X="30" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="validate_uint32" Collapsed="true">
+    <Position X="24.75" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="stbi__context" Collapsed="true">
+    <Position X="20.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="stbi__huffman" Collapsed="true">
+    <Position X="18.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="stbi__jpeg" Collapsed="true">
+    <Position X="18.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="resample_row_func" Collapsed="true">
+    <Position X="26.5" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="stbi__resample" Collapsed="true">
+    <Position X="17.5" Y="20.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="stbi__zhuffman" Collapsed="true">
+    <Position X="17.5" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="stbi__zbuf" Collapsed="true">
+    <Position X="5.5" Y="19.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="stbi__pngchunk" Collapsed="true">
+    <Position X="15.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="stbi__png" Collapsed="true">
+    <Position X="1.5" Y="18.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="stbi__pic_packet" Collapsed="true">
+    <Position X="13.5" Y="17.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="stbi__gif_lzw" Collapsed="true">
+    <Position X="9.5" Y="17.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="stbi__gif" Collapsed="true">
+    <Position X="14.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="tinyobj::material_t" Collapsed="true">
+    <Position X="11.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>tiny_obj_loader.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="tinyobj::mesh_t" Collapsed="true">
+    <Position X="5.5" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>tiny_obj_loader.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="tinyobj::shape_t" Collapsed="true">
+    <Position X="11.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>tiny_obj_loader.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Enum Name="ogl_LoadStatus" Collapsed="true">
+    <Position X="30" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>gl_core_4_4.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ShapeType" Collapsed="true">
+    <Position X="23" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACgAIAAAAAAABAAAAAAAAAAAAAAAACCAAAAAA=</HashCode>
+      <FileName>DIYPhysicsEngine\PhysicsObjects\PhysicsObject.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PhysicsType" Collapsed="true">
+    <Position X="31.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAQAAAAAAAAAAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>DIYPhysicsEngine\PhysicsObjects\PhysicsObject.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ForceType" Collapsed="true">
+    <Position X="28.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DIYPhysicsEngine\PhysicsObjects\RigidBody.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="RagDollParts" Collapsed="true">
+    <Position X="33.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AUAIAACSAAQABgAAAQAAAAgAAAAAAAAABMAgQAQEAQA=</HashCode>
+      <FileName>RagDoll.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0020_1" Collapsed="true">
+    <Position X="23" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAABAAAAAAAAAAEAAABAAAAAAAIAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0020_4" Collapsed="true">
+    <Position X="26.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAAAAAAAgAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0020_13" Collapsed="true">
+    <Position X="24.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAECAAAABAAIAAAAAAAhAAAAAAAAAAAAAA=</HashCode>
+      <FileName>stb_image.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

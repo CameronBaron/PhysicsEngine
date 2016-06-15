@@ -17,6 +17,7 @@
 #include "ParticleEmitter.h"
 #include "ParticleFluidEmitter.h"
 #include "CollisionCallBack.h"
+#include "MyControllerHitReport.h"
 
 using namespace physx;
 
@@ -80,15 +81,17 @@ public:
 	void SetupVisualDebugger();
 	PxScene* SetUpPhysX();
 	void UpdatePhysX(float deltaTime);
-	void SetupTutorial1();
+	void SetupScene();
 	void SetupCSHTutorial();
 	void UpdateCSHTutorial();
 
 	PxRigidActor* AddPhysXBox(const PxTransform a_pose, const PxVec3 a_size, const float a_density, PhysXActorType a_objType, const bool a_trigger = false);
 	PxRigidActor* AddPhysXSphere(const PxTransform a_pose, const float a_radius, const float a_density, PhysXActorType a_objType, const bool a_trigger = false);
 	PxRigidActor* AddPhysXPlane(const PxTransform a_pose, PhysXActorType a_objType, const bool a_trigger = false);
+	PxRigidActor* AddPhysXCapsule(const PxTransform a_pose, float a_radius, float a_halfHeight, const float a_density, PhysXActorType a_objType, const bool a_trigger = false);
 	void AddPhysXRagDoll(PxPhysics* a_physics, const PxTransform a_pose, float a_scale, PxMaterial* a_material);
 	void AddFluidSimWithContainer(const PxVec3 a_position);
+	void CharacterControls(float dt);
 
 	struct PhysXRigidActor
 	{
@@ -104,6 +107,10 @@ public:
 		// Box
 		PhysXRigidActor(PxPhysics* a_physics, PxTransform a_pose, const PxVec3 a_size, PhysXActorType a_objType, PxMaterial* a_material, const float a_density = 1)
 			: PhysXRigidActor(a_physics, a_pose, &PxBoxGeometry(a_size.x, a_size.y, a_size.z), a_objType, a_material, a_density)
+		{}
+		// Capsule
+		PhysXRigidActor(PxPhysics* a_physics, PxTransform a_pose, const float a_radius, float a_halfHeight, PhysXActorType a_objType, PxMaterial* a_material, const float a_density = 1)
+			: PhysXRigidActor(a_physics, a_pose, &PxCapsuleGeometry(a_radius, a_halfHeight), a_objType, a_material, a_density)
 		{}
 
 		PxRigidActor* GetActor() { return actor; }
@@ -144,6 +151,15 @@ public:
 	PxControllerManager* m_ControllerManager;
 	PxDefaultAllocator mDefaultAllocatorCallback;
 
+	// Player controller vars
+	MyControllerHitReport* m_myHitReport;
+	PxControllerManager* m_characterManager;
+	PxController* m_playerController;
+	float m_characterYVelocity;
+	float m_characterRotation;
+	float m_playerGravity;
+	PxExtendedVec3 startingPosition;
+
 	std::vector<PxRigidActor*> m_physXActors;
 	std::vector<PxArticulation*> m_physXRagDollActors;
 
@@ -160,7 +176,9 @@ public:
 	
     float m_delta_time;
 	float dt;
-	bool firing = false;
+	bool firingDIY = false;
+	bool firingPhysX = false;
+	bool updateFluid = false;
 };
 
 #endif //CAM_PROJ_H_

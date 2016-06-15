@@ -160,6 +160,7 @@
     <ClInclude Include="DIYPhysicsEngine\PhysicsObjects\SpringJoint.h" />
     <ClInclude Include="Gizmos.h" />
     <ClInclude Include="gl_core_4_4.h" />
+    <ClInclude Include="MyControllerHitReport.h" />
     <ClInclude Include="ParticleEmitter.h" />
     <ClInclude Include="ParticleFluidEmitter.h" />
     <ClInclude Include="Physics.h" />
@@ -193,6 +194,9 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PhysicsForGames.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

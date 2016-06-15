@@ -78,6 +78,9 @@
     <ClInclude Include="CollisionCallBack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MyControllerHitReport.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -136,5 +139,8 @@
     <ResourceCompile Include="PhysicsForGames.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

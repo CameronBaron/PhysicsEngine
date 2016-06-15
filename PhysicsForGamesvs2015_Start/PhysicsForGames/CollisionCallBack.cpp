@@ -15,6 +15,11 @@ void CollisionCallBack::onContact(const PxContactPairHeader& a_pairHeader, const
 		{
 			m_triggered = true;
 		}
+		else 
+		{
+			m_triggered = false;
+			m_triggerBody = nullptr;
+		}
 	}
 }
 
@@ -23,7 +28,17 @@ void CollisionCallBack::onTrigger(PxTriggerPair* a_pairs, PxU32 a_nbPairs)
 	for (PxU32 i = 0; i < a_nbPairs; ++i)
 	{
 		PxTriggerPair* pair = a_pairs + i;
-		m_triggered = true;
-		m_triggerBody = pair->otherActor;
+
+		// only interested in touches found and lost
+		if (!m_triggered)
+		{
+			m_triggered = true;
+			m_triggerBody = pair->triggerActor;
+		}
+		else
+		{
+			m_triggered = false;
+			m_triggerBody = nullptr;
+		}
 	}
 }

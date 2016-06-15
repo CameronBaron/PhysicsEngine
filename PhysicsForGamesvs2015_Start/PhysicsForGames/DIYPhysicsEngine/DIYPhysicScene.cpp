@@ -84,7 +84,6 @@ void DIYPhysicScene::AddGizmos()
 	}
 }
 
-
 vec3 DIYPhysicScene::ProjectileMotionPrediction(vec3 initialPos, vec3 initialVelocity, float time)
 {
 	vec3 posAtTime(1);
@@ -97,32 +96,6 @@ vec3 DIYPhysicScene::ProjectileMotionPrediction(vec3 initialPos, vec3 initialVel
 void DIYPhysicScene::CheckForCollision()
 {
 	int actorCount = actors.size();
-
-	// Try sorting actor list to have all springs at the end/beginning and skip over them to save cpu
-	// Try using iterator to save some cpu
-	
-	//for (auto iter = actors.begin(); iter != actors.end() - 1; )
-	//{
-	//	PhysicsObject* obj1 = (*iter);
-	//	//auto iterNext = std::next((iter), 1);
-	//	PhysicsObject* obj2 = (*++iter);
-	//
-	//	if (obj1->m_shapeID == ShapeType::JOINT || obj2->m_shapeID == ShapeType::JOINT)
-	//		continue;
-	//
-	//	if (obj1->m_physicsType == PhysicsType::STATIC && obj2->m_physicsType == PhysicsType::STATIC)
-	//		continue;
-	//
-	//	int _shapeID1 = obj1->m_shapeID;
-	//	int _shapeID2 = obj2->m_shapeID;
-	//	// Using function pointers
-	//	int functionIndex = (_shapeID1 * (ShapeType::Last + 1)) + _shapeID2;
-	//	func collisionFunctionPtr = collisionFunctionArray[functionIndex];
-	//	if (collisionFunctionPtr != nullptr)
-	//	{
-	//		collisionFunctionPtr(obj1, obj2);
-	//	}
-	//}
 
 	// nested for loops may be using more cpu than needed!!!
 	for (int outer = 0; outer < actorCount - 1; outer++)
@@ -450,7 +423,7 @@ void DIYPhysicScene::Response(RigidBody * obj1, RigidBody * obj2, float overlap,
 {
 	Seperate(obj1, obj2, overlap, normal);
 
-	const float coefficientOfRestitution = 0.9f;
+	const float coefficientOfRestitution = 0.5f;
 
 	vec3 relativeVel = obj2->m_linearVelocity - obj1->m_linearVelocity;
 	float velocityAlongNormal = glm::dot(relativeVel, normal);
